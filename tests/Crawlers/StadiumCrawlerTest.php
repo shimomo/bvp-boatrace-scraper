@@ -46,7 +46,7 @@ class StadiumCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlStadiums(): void
+    public function testCrawlStadiumsWithDate20170331(): void
     {
         $this->assertSame($this->stadiums, $this->crawler->crawl(
             Carbon::parse('2017-03-31')
@@ -56,7 +56,7 @@ class StadiumCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlStadiumIds(): void
+    public function testCrawlStadiumIdsWithDate20170331(): void
     {
         $this->assertSame(array_keys($this->stadiums), $this->crawler->crawlIds(
             Carbon::parse('2017-03-31')
@@ -66,7 +66,7 @@ class StadiumCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlStadiumNames(): void
+    public function testCrawlStadiumNamesWithDate20170331(): void
     {
         $this->assertSame(array_values($this->stadiums), $this->crawler->crawlNames(
             Carbon::parse('2017-03-31')
