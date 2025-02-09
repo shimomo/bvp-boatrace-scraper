@@ -32,7 +32,7 @@ class ResultCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlForDate20170331AndRaceStadiumCode24AndRaceCode1(): void
+    public function testCrawlWithDate20170331AndRaceStadiumCode24AndRaceCode1(): void
     {
         $response = $this->crawler->crawl(Carbon::parse('2017-03-31'), 24, 1);
         $this->assertSame('2017-03-31', $response['race_date']);
@@ -99,7 +99,7 @@ class ResultCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlForDate20191014AndRaceStadiumCode2AndRaceCode1(): void
+    public function testCrawlWithDate20191014AndRaceStadiumCode2AndRaceCode1(): void
     {
         $response = $this->crawler->crawl(Carbon::parse('2019-10-14'), 2, 1);
         $this->assertSame('2019-10-14', $response['race_date']);
