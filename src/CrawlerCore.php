@@ -114,7 +114,7 @@ class CrawlerCore implements CrawlerCoreInterface
         }
 
         throw new InvalidArgumentException(
-            'The crawler name for \'' . $name . '\' is invalid.'
+            __METHOD__ . "The crawler name for '{$name}' is invalid."
         );
     }
 
@@ -165,7 +165,7 @@ class CrawlerCore implements CrawlerCoreInterface
         }
 
         throw new InvalidArgumentException(
-            'The race stadium code for \'' . $raceStadiumCode . '\' is invalid.'
+            __METHOD__ . "The race stadium code for '{$raceStadiumCode}' is invalid."
         );
     }
 
@@ -187,7 +187,7 @@ class CrawlerCore implements CrawlerCoreInterface
         }
 
         throw new InvalidArgumentException(
-            'The race code for \'' . $raceCode . '\' is invalid.'
+            __METHOD__ . "() - The race code for '{$raceCode}' is invalid."
         );
     }
 }
