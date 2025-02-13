@@ -17,7 +17,7 @@ composer require bvp/crawler
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Boatrace\Venture\Project\Crawler;
+use BVP\Crawler\Crawler;
 
 var_dump(Crawler::programs('2017-03-31'));        // 2017年03月31日の出走表
 var_dump(Crawler::programs('2017-03-31', 24));    // 2017年03月31日 大村の出走表
@@ -41,4 +41,4 @@ var_dump(Crawler::stadiumNames('2017-03-31'));    // 2017年03月31日の開催�
 ```
 
 ## License
-The Crawler is open source software licensed under the [MIT license](LICENSE).
+The BVP Crawler package is open source software licensed under the [MIT license](LICENSE).
