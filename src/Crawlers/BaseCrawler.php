@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace BVP\Crawler\Crawlers;
 
-use Boatrace\Venture\Project\Converter;
-use Boatrace\Venture\Project\Trimmer;
+use BVP\Converter\Converter;
+use BVP\Trimmer\Trimmer;
 use BVP\Crawler\Traits\HttpBrowserInitializer;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;

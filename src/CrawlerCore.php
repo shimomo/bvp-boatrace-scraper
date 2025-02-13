@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BVP\Crawler;
 
-use Boatrace\Venture\Project\Converter;
+use BVP\Converter\Converter;
 use BVP\Crawler\Crawlers\BaseCrawlerInterface;
 use BVP\Crawler\Crawlers\OddsCrawler;
 use BVP\Crawler\Crawlers\PreviewCrawler;

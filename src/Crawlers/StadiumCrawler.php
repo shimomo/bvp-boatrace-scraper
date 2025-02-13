@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BVP\Crawler\Crawlers;
 
-use Boatrace\Venture\Project\Converter;
+use BVP\Converter\Converter;
 use Carbon\CarbonInterface;
 
 /**
