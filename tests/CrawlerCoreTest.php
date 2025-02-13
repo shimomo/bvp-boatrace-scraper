@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project\Tests;
+namespace BVP\Crawler\Tests;
 
-use Boatrace\Venture\Project\CrawlerCore;
+use BVP\Crawler\CrawlerCore;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class CrawlerCoreTest extends TestCase
 {
     /**
-     * @var \Boatrace\Venture\Project\CrawlerCore
+     * @var \BVP\Crawler\CrawlerCore
      */
     protected CrawlerCore $crawler;
 

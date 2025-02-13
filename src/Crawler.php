@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project;
+namespace BVP\Crawler;
 
 use Illuminate\Support\Collection;
 
@@ -12,12 +12,12 @@ use Illuminate\Support\Collection;
 class Crawler implements CrawlerInterface
 {
     /**
-     * @var \Boatrace\Venture\Project\CrawlerInterface
+     * @var \BVP\Crawler\CrawlerInterface
      */
     private static ?CrawlerInterface $instance;
 
     /**
-     * @param  \Boatrace\Venture\Project\CrawlerCoreInterface  $crawler
+     * @param  \BVP\Crawler\CrawlerCoreInterface  $crawler
      * @return void
      */
     public function __construct(private readonly CrawlerCoreInterface $crawler) {}
@@ -43,8 +43,8 @@ class Crawler implements CrawlerInterface
     }
 
     /**
-     * @param  \Boatrace\Venture\Project\CrawlerCoreInterface|null  $crawlerCore
-     * @return \Boatrace\Venture\Project\CrawlerInterface
+     * @param  \BVP\Crawler\CrawlerCoreInterface|null  $crawlerCore
+     * @return \BVP\Crawler\CrawlerInterface
      */
     public static function getInstance(?CrawlerCoreInterface $crawlerCore = null): CrawlerInterface
     {
@@ -52,8 +52,8 @@ class Crawler implements CrawlerInterface
     }
 
     /**
-     * @param  \Boatrace\Venture\Project\CrawlerCoreInterface|null  $crawlerCore
-     * @return \Boatrace\Venture\Project\CrawlerInterface
+     * @param  \BVP\Crawler\CrawlerCoreInterface|null  $crawlerCore
+     * @return \BVP\Crawler\CrawlerInterface
      */
     public static function createInstance(?CrawlerCoreInterface $crawlerCore = null): CrawlerInterface
     {

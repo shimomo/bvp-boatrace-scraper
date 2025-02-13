@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project;
+namespace BVP\Crawler;
 
 use Boatrace\Venture\Project\Converter;
-use Boatrace\Venture\Project\Crawlers\BaseCrawlerInterface;
-use Boatrace\Venture\Project\Crawlers\OddsCrawler;
-use Boatrace\Venture\Project\Crawlers\PreviewCrawler;
-use Boatrace\Venture\Project\Crawlers\ProgramCrawler;
-use Boatrace\Venture\Project\Crawlers\ResultCrawler;
-use Boatrace\Venture\Project\Crawlers\StadiumCrawler;
+use BVP\Crawler\Crawlers\BaseCrawlerInterface;
+use BVP\Crawler\Crawlers\OddsCrawler;
+use BVP\Crawler\Crawlers\PreviewCrawler;
+use BVP\Crawler\Crawlers\ProgramCrawler;
+use BVP\Crawler\Crawlers\ResultCrawler;
+use BVP\Crawler\Crawlers\StadiumCrawler;
 use Carbon\CarbonImmutable as Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
@@ -120,7 +120,7 @@ class CrawlerCore implements CrawlerCoreInterface
 
     /**
      * @param  string  $name
-     * @return \Boatrace\Venture\Project\CrawlerContractInterface
+     * @return \BVP\Crawler\CrawlerContractInterface
      */
     private function getCrawlerInstance(string $name): CrawlerContractInterface
     {
@@ -136,7 +136,7 @@ class CrawlerCore implements CrawlerCoreInterface
 
     /**
      * @param  string  $name
-     * @return \Boatrace\Venture\Project\CrawlerContractInterface
+     * @return \BVP\Crawler\CrawlerContractInterface
      */
     private function createCrawlerInstance(string $name): CrawlerContractInterface
     {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project\Crawlers;
+namespace BVP\Crawler\Crawlers;
 
 use Boatrace\Venture\Project\Converter;
 use Boatrace\Venture\Project\Trimmer;
-use Boatrace\Venture\Project\Traits\HttpBrowserInitializer;
+use BVP\Crawler\Traits\HttpBrowserInitializer;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
 

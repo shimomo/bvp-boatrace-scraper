@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project\Tests;
+namespace BVP\Crawler\Tests;
 
-use Boatrace\Venture\Project\Crawler;
+use BVP\Crawler\Crawler;
 use PHPUnit\Framework\TestCase;
 
 /**

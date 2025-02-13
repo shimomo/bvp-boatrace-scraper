@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project\Tests\Crawlers;
+namespace BVP\Crawler\Tests\Crawlers;
 
-use Boatrace\Venture\Project\Crawlers\StadiumCrawler;
+use BVP\Crawler\Crawlers\StadiumCrawler;
 use Carbon\CarbonImmutable as Carbon;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -15,7 +15,7 @@ use Symfony\Component\BrowserKit\HttpBrowser;
 class StadiumCrawlerTest extends TestCase
 {
     /**
-     * @var \Boatrace\Venture\Project\Crawlers\StadiumCrawler
+     * @var \BVP\Crawler\Crawlers\StadiumCrawler
      */
     protected StadiumCrawler $crawler;
 

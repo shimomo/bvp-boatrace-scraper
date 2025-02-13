@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project\Crawlers;
+namespace BVP\Crawler\Crawlers;
 
-use Boatrace\Venture\Project\CrawlerContractInterface;
+use BVP\Crawler\CrawlerContractInterface;
 use Carbon\CarbonInterface;
 
 /**

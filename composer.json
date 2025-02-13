@@ -24,12 +24,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Boatrace\\Venture\\Project\\": "src/"
+            "BVP\\Crawler\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Boatrace\\Venture\\Project\\Tests\\": "tests/"
+            "BVP\\Crawler\\Tests\\": "tests/"
         }
     }
 }

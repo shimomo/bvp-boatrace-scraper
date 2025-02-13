@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project;
+namespace BVP\Crawler;
 
 use Illuminate\Support\Collection;
 
@@ -26,14 +26,14 @@ interface CrawlerInterface extends CrawlerContractInterface
     public static function __callStatic(string $name, array $arguments): Collection;
 
     /**
-     * @param  \Boatrace\Venture\Project\CrawlerCoreInterface|null  $crawlerCore
-     * @return \Boatrace\Venture\Project\CrawlerInterface
+     * @param  \BVP\Crawler\CrawlerCoreInterface|null  $crawlerCore
+     * @return \BVP\Crawler\CrawlerInterface
      */
     public static function getInstance(?CrawlerCoreInterface $crawlerCore = null): CrawlerInterface;
 
     /**
-     * @param  \Boatrace\Venture\Project\CrawlerCoreInterface|null  $crawlerCore
-     * @return \Boatrace\Venture\Project\CrawlerInterface
+     * @param  \BVP\Crawler\CrawlerCoreInterface|null  $crawlerCore
+     * @return \BVP\Crawler\CrawlerInterface
      */
     public static function createInstance(?CrawlerCoreInterface $crawlerCore = null): CrawlerInterface;
 

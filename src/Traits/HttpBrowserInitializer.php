@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project\Traits;
+namespace BVP\Crawler\Traits;
 
 use Symfony\Component\BrowserKit\HttpBrowser;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Boatrace\Venture\Project\Crawlers;
+namespace BVP\Crawler\Crawlers;
 
 use Carbon\CarbonInterface;
 use Symfony\Component\DomCrawler\Crawler;
