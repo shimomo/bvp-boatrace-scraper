@@ -1,6 +1,7 @@
 {
     "name": "bvp/crawler",
     "description": "The BVP Crawler package for Boatrace.",
+    "keywords": ["library", "boatrace", "crawler"],
     "license": "MIT",
     "type": "library",
     "authors": [
