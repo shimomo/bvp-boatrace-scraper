@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler\Crawlers;
+namespace BVP\BoatraceScraper\Scrapers;
 
 use BVP\Converter\Converter;
 use Carbon\CarbonInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * @author shimomo
  */
-class PreviewCrawler extends BaseCrawler implements PreviewCrawlerInterface
+class PreviewScraper extends BaseScraper implements PreviewScraperInterface
 {
     /**
      * @var string
@@ -24,20 +24,20 @@ class PreviewCrawler extends BaseCrawler implements PreviewCrawlerInterface
      * @param  int                      $raceCode
      * @return array
      */
-    public function crawl(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array
     {
         $response = [];
 
-        $crawlerFormat = '%s/owpc/pc/race/beforeinfo?hd=%s&jcd=%02d&rno=%d';
-        $crawlerUrl = sprintf($crawlerFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
-        $crawler = $this->httpBrowser->request('GET', $crawlerUrl);
+        $scraperFormat = '%s/owpc/pc/race/beforeinfo?hd=%s&jcd=%02d&rno=%d';
+        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
+        $scraper = $this->httpBrowser->request('GET', $scraperUrl);
         sleep($this->seconds);
 
         $levelFormat = '%s/div[2]/div[3]/ul/li';
         $levelXPath = sprintf($levelFormat, $this->baseXPath);
 
         $this->baseLevel = 0;
-        if (!is_null($this->filterXPath($crawler, $levelXPath))) {
+        if (!is_null($this->filterXPath($scraper, $levelXPath))) {
             $this->baseLevel = 1;
         }
 
@@ -55,12 +55,12 @@ class PreviewCrawler extends BaseCrawler implements PreviewCrawlerInterface
         $raceTemperatureXPath = sprintf($raceTemperatureFormat, $this->baseXPath, $this->baseLevel + 5);
         $raceWaterTemperatureXPath = sprintf($raceWaterTemperatureFormat, $this->baseXPath, $this->baseLevel + 5);
 
-        $raceWind = $this->filterXPath($crawler, $raceWindXPath);
-        $raceWindDirectionId = $this->filterXPathForWindDirectionId($crawler, $raceWindDirectionIdXPath);
-        $raceWave = $this->filterXPath($crawler, $raceWaveXPath);
-        $raceWeatherName = $this->filterXPath($crawler, $raceWeatherNameXPath);
-        $raceTemperature = $this->filterXPath($crawler, $raceTemperatureXPath);
-        $raceWaterTemperature = $this->filterXPath($crawler, $raceWaterTemperatureXPath);
+        $raceWind = $this->filterXPath($scraper, $raceWindXPath);
+        $raceWindDirectionId = $this->filterXPathForWindDirectionId($scraper, $raceWindDirectionIdXPath);
+        $raceWave = $this->filterXPath($scraper, $raceWaveXPath);
+        $raceWeatherName = $this->filterXPath($scraper, $raceWeatherNameXPath);
+        $raceTemperature = $this->filterXPath($scraper, $raceTemperatureXPath);
+        $raceWaterTemperature = $this->filterXPath($scraper, $raceWaterTemperatureXPath);
 
         $raceWind = Converter::wind($raceWind);
         $raceWindDirectionId = Converter::windDirection($raceWindDirectionId);
@@ -79,19 +79,19 @@ class PreviewCrawler extends BaseCrawler implements PreviewCrawlerInterface
         $response['race_temperature'] = $raceTemperature;
         $response['race_water_temperature'] = $raceWaterTemperature;
 
-        $response += $this->crawlBoats($crawler, $raceStadiumCode, $raceCode);
-        $response += $this->crawlCourses($crawler, $raceStadiumCode, $raceCode);
+        $response += $this->scrapeBoats($scraper, $raceStadiumCode, $raceCode);
+        $response += $this->scrapeCourses($scraper, $raceStadiumCode, $raceCode);
 
         return $response;
     }
 
     /**
-     * @param  \Symfony\Component\DomCrawler\Crawler  $crawler
+     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  int                                    $raceStadiumCode
      * @param  int                                    $raceCode
      * @return array
      */
-    private function crawlBoats(Crawler $crawler, int $raceStadiumCode, int $raceCode): array
+    private function scrapeBoats(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
     {
         $response = [];
 
@@ -108,11 +108,11 @@ class PreviewCrawler extends BaseCrawler implements PreviewCrawlerInterface
             $racerExhibitionTimeXPath = sprintf($racerExhibitionTimeFormat, $this->baseXPath, $this->baseLevel + 5, $index);
             $racerTiltAdjustmentXPath = sprintf($racerTiltAdjustmentFormat, $this->baseXPath, $this->baseLevel + 5, $index);
 
-            $racerBoatNumber = $this->filterXPath($crawler, $racerBoatNumberXPath);
-            $racerWeight = $this->filterXPath($crawler, $racerWeightXPath);
-            $racerWeightAdjustment = $this->filterXPath($crawler, $racerWeightAdjustmentXPath);
-            $racerExhibitionTime = $this->filterXPath($crawler, $racerExhibitionTimeXPath);
-            $racerTiltAdjustment = $this->filterXPath($crawler, $racerTiltAdjustmentXPath);
+            $racerBoatNumber = $this->filterXPath($scraper, $racerBoatNumberXPath);
+            $racerWeight = $this->filterXPath($scraper, $racerWeightXPath);
+            $racerWeightAdjustment = $this->filterXPath($scraper, $racerWeightAdjustmentXPath);
+            $racerExhibitionTime = $this->filterXPath($scraper, $racerExhibitionTimeXPath);
+            $racerTiltAdjustment = $this->filterXPath($scraper, $racerTiltAdjustmentXPath);
 
             $racerBoatNumber = Converter::int($racerBoatNumber ?? $index);
             $racerWeight = Converter::float($racerWeight);
@@ -131,12 +131,12 @@ class PreviewCrawler extends BaseCrawler implements PreviewCrawlerInterface
     }
 
     /**
-     * @param  \Symfony\Component\DomCrawler\Crawler  $crawler
+     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  int                                    $raceStadiumCode
      * @param  int                                    $raceCode
      * @return array
      */
-    private function crawlCourses(Crawler $crawler, int $raceStadiumCode, int $raceCode): array
+    private function scrapeCourses(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
     {
         $response = [];
 
@@ -147,8 +147,8 @@ class PreviewCrawler extends BaseCrawler implements PreviewCrawlerInterface
             $racerBoatNumberXPath = sprintf($racerBoatNumberFormat, $this->baseXPath, $this->baseLevel + 5, $index);
             $racerStartTimingXPath = sprintf($racerStartTimingFormat, $this->baseXPath, $this->baseLevel + 5, $index);
 
-            $racerBoatNumber = $this->filterXPath($crawler, $racerBoatNumberXPath);
-            $racerStartTiming = $this->filterXPath($crawler, $racerStartTimingXPath);
+            $racerBoatNumber = $this->filterXPath($scraper, $racerBoatNumberXPath);
+            $racerStartTiming = $this->filterXPath($scraper, $racerStartTimingXPath);
 
             $racerBoatNumber = Converter::int($racerBoatNumber);
             $racerStartTiming = Converter::startTiming($racerStartTiming);

@@ -2,21 +2,16 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler\Tests;
+namespace BVP\BoatraceScraper\Tests;
 
-use BVP\Crawler\CrawlerCore;
+use BVP\BoatraceScraper\Scraper;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @author shimomo
  */
-class CrawlerCoreTest extends TestCase
+class ScraperTest extends TestCase
 {
-    /**
-     * @var \BVP\Crawler\CrawlerCore
-     */
-    protected CrawlerCore $crawler;
-
     /**
      * @var array
      */
@@ -34,16 +29,9 @@ class CrawlerCoreTest extends TestCase
     /**
      * @return void
      */
-    protected function setUp(): void
-    {
-        $this->crawler = new CrawlerCore();
-    }
-    /**
-     * @return void
-     */
     public function testProgramsWithDate20170331AndRaceStadiumCode24(): void
     {
-        $response = $this->crawler->programs('2017-03-31', 24);
+        $response = Scraper::programs('2017-03-31', 24);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -196,7 +184,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testProgramsWithDate20170331AndRaceCode1(): void
     {
-        $response = $this->crawler->programs('2017-03-31', null, 1);
+        $response = Scraper::programs('2017-03-31', null, 1);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -349,7 +337,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testProgramsWithDate20170331AndRaceStadiumCode24AndRaceCode1(): void
     {
-        $response = $this->crawler->programs('2017-03-31', 24, 1);
+        $response = Scraper::programs('2017-03-31', 24, 1);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -502,7 +490,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testPreviewsWithDate20170331AndRaceStadiumCode24(): void
     {
-        $response = $this->crawler->previews('2017-03-31', 24);
+        $response = Scraper::previews('2017-03-31', 24);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -567,7 +555,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testPreviewaWithDate20170331AndRaceCode1(): void
     {
-        $response = $this->crawler->previews('2017-03-31', null, 1);
+        $response = Scraper::previews('2017-03-31', null, 1);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -632,7 +620,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testPreviewsWithDate20170331AndRaceStadiumCode24AndRaceCode1(): void
     {
-        $response = $this->crawler->previews('2017-03-31', 24, 1);
+        $response = Scraper::previews('2017-03-31', 24, 1);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -697,7 +685,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testResultsWithDate20170331AndRaceStadiumCode24(): void
     {
-        $response = $this->crawler->results('2017-03-31', 24);
+        $response = Scraper::results('2017-03-31', 24);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -764,7 +752,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testResultsWithDate20170331AndRaceCode1(): void
     {
-        $response = $this->crawler->results('2017-03-31', null, 1);
+        $response = Scraper::results('2017-03-31', null, 1);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -831,7 +819,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testResultsWithDate20170331AndRaceStadiumCode24AndRaceCode1(): void
     {
-        $response = $this->crawler->results('2017-03-31', 24, 1);
+        $response = Scraper::results('2017-03-31', 24, 1);
         $this->assertSame('2017-03-31', $response->get(24)->get(1)->get('race_date'));
         $this->assertSame(24, $response->get(24)->get(1)->get('race_stadium_code'));
         $this->assertSame(1, $response->get(24)->get(1)->get('race_code'));
@@ -898,7 +886,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testStadiumsWithDate20170331(): void
     {
-        $this->assertSame($this->stadiums, $this->crawler->stadiums('2017-03-31')->all());
+        $this->assertSame($this->stadiums, Scraper::stadiums('2017-03-31')->all());
     }
 
     /**
@@ -906,7 +894,7 @@ class CrawlerCoreTest extends TestCase
      */
     public function testStadiumIdsWithDate20170331(): void
     {
-        $this->assertSame(array_keys($this->stadiums), $this->crawler->stadiumIds('2017-03-31')->all());
+        $this->assertSame(array_keys($this->stadiums), Scraper::stadiumIds('2017-03-31')->all());
     }
 
     /**
@@ -914,6 +902,6 @@ class CrawlerCoreTest extends TestCase
      */
     public function testStadiumNamesWithDate20170331(): void
     {
-        $this->assertSame(array_values($this->stadiums), $this->crawler->stadiumNames('2017-03-31')->all());
+        $this->assertSame(array_values($this->stadiums), Scraper::stadiumNames('2017-03-31')->all());
     }
 }

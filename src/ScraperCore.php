@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler;
+namespace BVP\BoatraceScraper;
 
 use BVP\Converter\Converter;
-use BVP\Crawler\Crawlers\BaseCrawlerInterface;
-use BVP\Crawler\Crawlers\OddsCrawler;
-use BVP\Crawler\Crawlers\PreviewCrawler;
-use BVP\Crawler\Crawlers\ProgramCrawler;
-use BVP\Crawler\Crawlers\ResultCrawler;
-use BVP\Crawler\Crawlers\StadiumCrawler;
+use BVP\BoatraceScraper\Scrapers\BaseScraperInterface;
+use BVP\BoatraceScraper\Scrapers\OddsScraper;
+use BVP\BoatraceScraper\Scrapers\PreviewScraper;
+use BVP\BoatraceScraper\Scrapers\ProgramScraper;
+use BVP\BoatraceScraper\Scrapers\ResultScraper;
+use BVP\BoatraceScraper\Scrapers\StadiumScraper;
 use Carbon\CarbonImmutable as Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
@@ -20,7 +20,7 @@ use Symfony\Component\BrowserKit\HttpBrowser;
 /**
  * @author shimomo
  */
-class CrawlerCore implements CrawlerCoreInterface
+class ScraperCore implements ScraperCoreInterface
 {
     /**
      * @var array
@@ -30,14 +30,14 @@ class CrawlerCore implements CrawlerCoreInterface
     /**
      * @var array
      */
-    private array $crawlerClasses = [
-        'oddses' => OddsCrawler::class,
-        'previews' => PreviewCrawler::class,
-        'programs' => ProgramCrawler::class,
-        'results' => ResultCrawler::class,
-        'stadiumIds' => StadiumCrawler::class,
-        'stadiumNames' => StadiumCrawler::class,
-        'stadiums' => StadiumCrawler::class,
+    private array $scraperClasses = [
+        'oddses' => OddsScraper::class,
+        'previews' => PreviewScraper::class,
+        'programs' => ProgramScraper::class,
+        'results' => ResultScraper::class,
+        'stadiumIds' => StadiumScraper::class,
+        'stadiumNames' => StadiumScraper::class,
+        'stadiums' => StadiumScraper::class,
     ];
 
     /**
@@ -59,7 +59,7 @@ class CrawlerCore implements CrawlerCoreInterface
      */
     public function __call(string $name, array $arguments): Collection
     {
-        return $this->crawl($name, ...$arguments);
+        return $this->scraper($name, ...$arguments);
     }
 
     /**
@@ -69,18 +69,18 @@ class CrawlerCore implements CrawlerCoreInterface
      * @param  string|int|null                 $raceCode
      * @return \Illuminate\Support\Collection
      */
-    private function crawl(string $name, CarbonInterface|string $date, string|int|null $raceStadiumCode = null, string|int|null $raceCode = null): Collection
+    private function scraper(string $name, CarbonInterface|string $date, string|int|null $raceStadiumCode = null, string|int|null $raceCode = null): Collection
     {
-        $crawler = $this->getCrawlerInstance($name);
+        $scraper = $this->getScraperInstance($name);
         $carbonDate = Carbon::parse($date);
 
         if (str_starts_with($name, 'stadium')) {
             $methodName = match ($name) {
-                'stadiumIds' => 'crawlIds',
-                'stadiumNames' => 'crawlNames',
-                default => 'crawl',
+                'stadiumIds' => 'scrapeIds',
+                'stadiumNames' => 'scrapeNames',
+                default => 'scrape',
             };
-            $response = $crawler->$methodName($carbonDate);
+            $response = $scraper->$methodName($carbonDate);
             return collect($response)->recursive();
         }
 
@@ -90,7 +90,7 @@ class CrawlerCore implements CrawlerCoreInterface
         $response = [];
         foreach ($raceStadiumCodes as $raceStadiumCode) {
             foreach ($raceCodes as $raceCode) {
-                $response[$raceStadiumCode][$raceCode] = $crawler->crawl(
+                $response[$raceStadiumCode][$raceCode] = $scraper->scrape(
                     $carbonDate,
                     $raceStadiumCode,
                     $raceCode
@@ -107,41 +107,41 @@ class CrawlerCore implements CrawlerCoreInterface
      *
      * @throws \InvalidArgumentException
      */
-    private function resolveCrawlerClass(string $name): string
+    private function resolveScraperClass(string $name): string
     {
-        if (isset($this->crawlerClasses[$name])) {
-            return $this->crawlerClasses[$name];
+        if (isset($this->scraperClasses[$name])) {
+            return $this->scraperClasses[$name];
         }
 
         throw new InvalidArgumentException(
-            __METHOD__ . "The crawler name for '{$name}' is invalid."
+            __METHOD__ . "The scraper name for '{$name}' is invalid."
         );
     }
 
     /**
      * @param  string  $name
-     * @return \BVP\Crawler\CrawlerContractInterface
+     * @return \BVP\BoatraceScraper\ScraperContractInterface
      */
-    private function getCrawlerInstance(string $name): CrawlerContractInterface
+    private function getScraperInstance(string $name): ScraperContractInterface
     {
         if (isset($this->instances[$name])) {
             return $this->instances[$name];
         }
 
-        $crawler = $this->resolveCrawlerClass($name);
-        return $this->instances[$name] = new $crawler(
+        $scraper = $this->resolveScraperClass($name);
+        return $this->instances[$name] = new $scraper(
             new HttpBrowser()
         );
     }
 
     /**
      * @param  string  $name
-     * @return \BVP\Crawler\CrawlerContractInterface
+     * @return \BVP\BoatraceScraper\ScraperContractInterface
      */
-    private function createCrawlerInstance(string $name): CrawlerContractInterface
+    private function createScraperInstance(string $name): ScraperContractInterface
     {
-        $crawler = $this->resolveCrawlerClass($name);
-        return $this->instances[$name] = new $crawler(
+        $scraper = $this->resolveScraperClass($name);
+        return $this->instances[$name] = new $scraper(
             new HttpBrowser()
         );
     }
@@ -156,7 +156,7 @@ class CrawlerCore implements CrawlerCoreInterface
     private function getRaceStadiumCodes(CarbonInterface $carbonDate, string|int|null $raceStadiumCode): array
     {
         if (is_null($raceStadiumCode)) {
-            return $this->getCrawlerInstance('stadiums')->crawlIds($carbonDate);
+            return $this->getScraperInstance('stadiums')->scrapeIds($carbonDate);
         }
 
         $formattedRaceStadiumCode = Converter::string($raceStadiumCode);

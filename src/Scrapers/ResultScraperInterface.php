@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler\Crawlers;
+namespace BVP\BoatraceScraper\Scrapers;
 
-use BVP\Crawler\CrawlerContractInterface;
+use BVP\BoatraceScraper\ScraperContractInterface;
 use Carbon\CarbonInterface;
 
 /**
  * @author shimomo
  */
-interface ResultCrawlerInterface extends CrawlerContractInterface
+interface ResultScraperInterface extends ScraperContractInterface
 {
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
@@ -18,5 +18,5 @@ interface ResultCrawlerInterface extends CrawlerContractInterface
      * @param  int                      $raceCode
      * @return array
      */
-    public function crawl(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array;
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array;
 }

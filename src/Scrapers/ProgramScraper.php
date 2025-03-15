@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler\Crawlers;
+namespace BVP\BoatraceScraper\Scrapers;
 
 use BVP\Converter\Converter;
 use BVP\Trimmer\Trimmer;
@@ -12,7 +12,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * @author shimomo
  */
-class ProgramCrawler extends BaseCrawler implements ProgramCrawlerInterface
+class ProgramScraper extends BaseScraper implements ProgramScraperInterface
 {
     /**
      * @var string
@@ -25,20 +25,20 @@ class ProgramCrawler extends BaseCrawler implements ProgramCrawlerInterface
      * @param  int                      $raceCode
      * @return array
      */
-    public function crawl(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array
     {
         $response = [];
 
-        $crawlerFormat = '%s/owpc/pc/race/racelist?hd=%s&jcd=%02d&rno=%d';
-        $crawlerUrl = sprintf($crawlerFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
-        $crawler = $this->httpBrowser->request('GET', $crawlerUrl);
+        $scraperFormat = '%s/owpc/pc/race/racelist?hd=%s&jcd=%02d&rno=%d';
+        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
+        $scraper = $this->httpBrowser->request('GET', $scraperUrl);
         sleep($this->seconds);
 
         $levelFormat = '%s/div[2]/div[3]/ul/li';
         $levelXPath = sprintf($levelFormat, $this->baseXPath);
 
         $this->baseLevel = 0;
-        if (!is_null($this->filterXPath($crawler, $levelXPath))) {
+        if (!is_null($this->filterXPath($scraper, $levelXPath))) {
             $this->baseLevel = 1;
         }
 
@@ -50,9 +50,9 @@ class ProgramCrawler extends BaseCrawler implements ProgramCrawlerInterface
         $raceSubtitleDistanceXPath = sprintf($raceSubtitleDistanceFormat, $this->baseXPath, $this->baseLevel + 3);
         $raceDeadlineXPath = sprintf($raceDeadlineFormat, $this->baseXPath, $raceCode + 1);
 
-        $raceTitle = $this->filterXPath($crawler, $raceTitleXPath);
-        $raceSubtitleDistance = $this->filterXPath($crawler, $raceSubtitleDistanceXPath);
-        $raceDeadline = $this->filterXPath($crawler, $raceDeadlineXPath);
+        $raceTitle = $this->filterXPath($scraper, $raceTitleXPath);
+        $raceSubtitleDistance = $this->filterXPath($scraper, $raceSubtitleDistanceXPath);
+        $raceDeadline = $this->filterXPath($scraper, $raceDeadlineXPath);
 
         $raceClosedAt = null;
         if (!is_null($raceDeadline)) {
@@ -69,18 +69,18 @@ class ProgramCrawler extends BaseCrawler implements ProgramCrawlerInterface
         $response['race_subtitle'] = $raceSubtitle;
         $response['race_distance'] = $raceDistance;
 
-        $response += $this->crawlBoats($crawler, $raceStadiumCode, $raceCode);
+        $response += $this->scrapeBoats($scraper, $raceStadiumCode, $raceCode);
 
         return $response;
     }
 
     /**
-     * @param  \Symfony\Component\DomCrawler\Crawler  $crawler
+     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  int                                    $raceStadiumCode
      * @param  int                                    $raceCode
      * @return array
      */
-    private function crawlBoats(Crawler $crawler, int $raceStadiumCode, int $raceCode): array
+    private function scrapeBoats(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
     {
         $response = [];
 
@@ -105,15 +105,15 @@ class ProgramCrawler extends BaseCrawler implements ProgramCrawlerInterface
             $racerAssignedMotorNumberMotorTop23PercentXPath = sprintf($racerAssignedMotorNumberMotorTop23PercentFormat, $this->baseXPath, $this->baseLevel + 5, $index);
             $racerAssignedBoatNumberMotorTop23PercentXPath = sprintf($racerAssignedBoatNumberBoatTop23PercentFormat, $this->baseXPath, $this->baseLevel + 5, $index);
 
-            $racerBoatNumber = $this->filterXPath($crawler, $racerBoatNumberXPath);
-            $racerName = $this->filterXPath($crawler, $racerNameXPath);
-            $racerNumberClass = $this->filterXPath($crawler, $racerNumberClassXPath);
-            $racerBranchBirthplaceAgeWeight = $this->filterXPath($crawler, $racerBranchBirthplaceAgeWeightXPath);
-            $racerFlyingLateStartTiming = $this->filterXPath($crawler, $racerFlyingLateStartTimingXPath);
-            $racerNationalTop123Percent = $this->filterXPath($crawler, $racerNationalTop123PercentXPath);
-            $racerLocalTop123Percent = $this->filterXPath($crawler, $racerLocalTop123PercentXPath);
-            $racerAssignedMotorNumberMotorTop23Percent = $this->filterXPath($crawler, $racerAssignedMotorNumberMotorTop23PercentXPath);
-            $racerAssignedBoatNumberBoatTop23Percent = $this->filterXPath($crawler, $racerAssignedBoatNumberMotorTop23PercentXPath);
+            $racerBoatNumber = $this->filterXPath($scraper, $racerBoatNumberXPath);
+            $racerName = $this->filterXPath($scraper, $racerNameXPath);
+            $racerNumberClass = $this->filterXPath($scraper, $racerNumberClassXPath);
+            $racerBranchBirthplaceAgeWeight = $this->filterXPath($scraper, $racerBranchBirthplaceAgeWeightXPath);
+            $racerFlyingLateStartTiming = $this->filterXPath($scraper, $racerFlyingLateStartTimingXPath);
+            $racerNationalTop123Percent = $this->filterXPath($scraper, $racerNationalTop123PercentXPath);
+            $racerLocalTop123Percent = $this->filterXPath($scraper, $racerLocalTop123PercentXPath);
+            $racerAssignedMotorNumberMotorTop23Percent = $this->filterXPath($scraper, $racerAssignedMotorNumberMotorTop23PercentXPath);
+            $racerAssignedBoatNumberBoatTop23Percent = $this->filterXPath($scraper, $racerAssignedBoatNumberMotorTop23PercentXPath);
 
             $racerBoatNumber = Converter::int($racerBoatNumber ?? $index);
             $racerName = Converter::name($racerName);

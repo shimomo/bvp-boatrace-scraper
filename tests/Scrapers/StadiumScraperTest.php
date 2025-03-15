@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler\Tests\Crawlers;
+namespace BVP\BoatraceScraper\Tests\Scrapers;
 
-use BVP\Crawler\Crawlers\StadiumCrawler;
+use BVP\BoatraceScraper\Scrapers\StadiumScraper;
 use Carbon\CarbonImmutable as Carbon;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -12,12 +12,12 @@ use Symfony\Component\BrowserKit\HttpBrowser;
 /**
  * @author shimomo
  */
-class StadiumCrawlerTest extends TestCase
+class StadiumScraperTest extends TestCase
 {
     /**
-     * @var \BVP\Crawler\Crawlers\StadiumCrawler
+     * @var \BVP\BoatraceScraper\Scrapers\StadiumScraper
      */
-    protected StadiumCrawler $crawler;
+    protected StadiumScraper $scraper;
 
     /**
      * @var array
@@ -38,7 +38,7 @@ class StadiumCrawlerTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->crawler = new StadiumCrawler(
+        $this->scraper = new StadiumScraper(
             new HttpBrowser()
         );
     }
@@ -46,9 +46,9 @@ class StadiumCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlStadiumsWithDate20170331(): void
+    public function testScrapeStadiumsWithDate20170331(): void
     {
-        $this->assertSame($this->stadiums, $this->crawler->crawl(
+        $this->assertSame($this->stadiums, $this->scraper->scrape(
             Carbon::parse('2017-03-31')
         ));
     }
@@ -56,9 +56,9 @@ class StadiumCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlStadiumIdsWithDate20170331(): void
+    public function testScrapeStadiumIdsWithDate20170331(): void
     {
-        $this->assertSame(array_keys($this->stadiums), $this->crawler->crawlIds(
+        $this->assertSame(array_keys($this->stadiums), $this->scraper->scrapeIds(
             Carbon::parse('2017-03-31')
         ));
     }
@@ -66,9 +66,9 @@ class StadiumCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlStadiumNamesWithDate20170331(): void
+    public function testScrapeStadiumNamesWithDate20170331(): void
     {
-        $this->assertSame(array_values($this->stadiums), $this->crawler->crawlNames(
+        $this->assertSame(array_values($this->stadiums), $this->scraper->scrapeNames(
             Carbon::parse('2017-03-31')
         ));
     }

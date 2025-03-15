@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler;
+namespace BVP\BoatraceScraper;
 
 use Illuminate\Support\Collection;
 
 /**
  * @author shimomo
  */
-interface CrawlerInterface extends CrawlerContractInterface
+interface ScraperInterface extends ScraperContractInterface
 {
     /**
      * @param  string  $name
@@ -26,16 +26,16 @@ interface CrawlerInterface extends CrawlerContractInterface
     public static function __callStatic(string $name, array $arguments): Collection;
 
     /**
-     * @param  \BVP\Crawler\CrawlerCoreInterface|null  $crawlerCore
-     * @return \BVP\Crawler\CrawlerInterface
+     * @param  \BVP\BoatraceScraper\ScraperCoreInterface|null  $scraperCore
+     * @return \BVP\BoatraceScraper\ScraperInterface
      */
-    public static function getInstance(?CrawlerCoreInterface $crawlerCore = null): CrawlerInterface;
+    public static function getInstance(?ScraperCoreInterface $scraperCore = null): ScraperInterface;
 
     /**
-     * @param  \BVP\Crawler\CrawlerCoreInterface|null  $crawlerCore
-     * @return \BVP\Crawler\CrawlerInterface
+     * @param  \BVP\BoatraceScraper\ScraperCoreInterface|null  $scraperCore
+     * @return \BVP\BoatraceScraper\ScraperInterface
      */
-    public static function createInstance(?CrawlerCoreInterface $crawlerCore = null): CrawlerInterface;
+    public static function createInstance(?ScraperCoreInterface $scraperCore = null): ScraperInterface;
 
     /**
      * @return void

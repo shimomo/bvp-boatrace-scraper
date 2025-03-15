@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler\Crawlers;
+namespace BVP\BoatraceScraper\Scrapers;
 
-use BVP\Crawler\CrawlerContractInterface;
+use BVP\BoatraceScraper\ScraperContractInterface;
 use Carbon\CarbonInterface;
 
 /**
  * @author shimomo
  */
-interface StadiumCrawlerInterface extends CrawlerContractInterface
+interface StadiumScraperInterface extends ScraperContractInterface
 {
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
      * @return array
      */
-    public function crawl(CarbonInterface $carbonDate): array;
+    public function scrape(CarbonInterface $carbonDate): array;
 
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
      * @return array
      */
-    public function crawlIds(CarbonInterface $carbonDate): array;
+    public function scrapeIds(CarbonInterface $carbonDate): array;
 
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
      * @return array
      */
-    public function crawlNames(CarbonInterface $carbonDate): array;
+    public function scrapeNames(CarbonInterface $carbonDate): array;
 }

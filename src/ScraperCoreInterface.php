@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler;
+namespace BVP\BoatraceScraper;
 
 use Illuminate\Support\Collection;
 
 /**
  * @author shimomo
  */
-interface CrawlerCoreInterface extends CrawlerContractInterface
+interface ScraperCoreInterface extends ScraperContractInterface
 {
     /**
      * @param  string  $name

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler\Crawlers;
+namespace BVP\BoatraceScraper\Scrapers;
 
 use BVP\Converter\Converter;
 use BVP\Trimmer\Trimmer;
-use BVP\Crawler\Traits\HttpBrowserInitializer;
+use BVP\BoatraceScraper\Traits\HttpBrowserInitializer;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * @author shimomo
  */
-abstract class BaseCrawler
+abstract class BaseScraper
 {
     use HttpBrowserInitializer;
 
@@ -42,64 +42,64 @@ abstract class BaseCrawler
     }
 
     /**
-     * @param  \Symfony\Component\DomCrawler\Crawler  $crawler
+     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  string                                 $xpath
      * @return string|null
      */
-    protected function filterXPath(Crawler $crawler, string $xpath): ?string
+    protected function filterXPath(Crawler $scraper, string $xpath): ?string
     {
-        if (!$crawler->filterXPath($xpath)->count()) {
+        if (!$scraper->filterXPath($xpath)->count()) {
             return null;
         }
 
-        $value = $crawler->filterXPath($xpath)->text();
+        $value = $scraper->filterXPath($xpath)->text();
         $value = Converter::string($value);
         $value = Trimmer::trim($value);
         return $value;
     }
 
     /**
-     * @param  \Symfony\Component\DomCrawler\Crawler  $crawler
+     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  string                                 $xpath
      * @return string
      */
-    protected function filterXPathForWindDirectionId(Crawler $crawler, string $xpath): ?string
+    protected function filterXPathForWindDirectionId(Crawler $scraper, string $xpath): ?string
     {
-        if (!$crawler->filterXPath($xpath)->count()) {
+        if (!$scraper->filterXPath($xpath)->count()) {
             return null;
         }
 
-        $value = $crawler->filterXPath($xpath)->attr('class');
+        $value = $scraper->filterXPath($xpath)->attr('class');
         $value = Converter::string($value);
         $value = Trimmer::trim($value);
         return $value;
     }
 
     /**
-     * @param  \Symfony\Component\DomCrawler\Crawler  $crawler
+     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  string                                 $xpath
      * @return float|null
      */
-    protected function filterXPathForOdds(Crawler $crawler, string $xpath): ?float
+    protected function filterXPathForOdds(Crawler $scraper, string $xpath): ?float
     {
-        if (!$crawler->filterXPath($xpath)->count()) {
+        if (!$scraper->filterXPath($xpath)->count()) {
             return null;
         }
 
-        $value = $crawler->filterXPath($xpath)->text();
+        $value = $scraper->filterXPath($xpath)->text();
         $value = Converter::float($value);
         return $value;
     }
 
     /**
-     * @param  \Symfony\Component\DomCrawler\Crawler  $crawler
+     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  string                                 $xpath
      * @return array
      */
-    protected function filterXPathForOddsWithLowerLimitAndUpperLimit(Crawler $crawler, string $xpath): array
+    protected function filterXPathForOddsWithLowerLimitAndUpperLimit(Crawler $scraper, string $xpath): array
     {
-        if ($crawler->filterXPath($xpath)->count()) {
-            if (count($oddses = explode('-', $crawler->filterXPath($xpath)->text())) === 2) {
+        if ($scraper->filterXPath($xpath)->count()) {
+            if (count($oddses = explode('-', $scraper->filterXPath($xpath)->text())) === 2) {
                 $lowerLimit = Converter::float(array_shift($oddses));
                 $upperLimit = Converter::float(array_shift($oddses));
             }

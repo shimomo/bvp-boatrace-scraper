@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BVP\Crawler\Tests\Crawlers;
+namespace BVP\BoatraceScraper\Tests\Scrapers;
 
-use BVP\Crawler\Crawlers\ResultCrawler;
+use BVP\BoatraceScraper\Scrapers\ResultScraper;
 use Carbon\CarbonImmutable as Carbon;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -12,19 +12,19 @@ use Symfony\Component\BrowserKit\HttpBrowser;
 /**
  * @author shimomo
  */
-class ResultCrawlerTest extends TestCase
+class ResultScraperTest extends TestCase
 {
     /**
-     * @var \BVP\Crawler\Crawlers\ResultCrawler
+     * @var \BVP\BoatraceScraper\Scrapers\ResultScraper
      */
-    protected ResultCrawler $crawler;
+    protected ResultScraper $scraper;
 
     /**
      * @return void
      */
     protected function setUp(): void
     {
-        $this->crawler = new ResultCrawler(
+        $this->scraper = new ResultScraper(
             new HttpBrowser()
         );
     }
@@ -32,9 +32,9 @@ class ResultCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlWithDate20170331AndRaceStadiumCode24AndRaceCode1(): void
+    public function testScrapeWithDate20170331AndRaceStadiumCode24AndRaceCode1(): void
     {
-        $response = $this->crawler->crawl(Carbon::parse('2017-03-31'), 24, 1);
+        $response = $this->scraper->scrape(Carbon::parse('2017-03-31'), 24, 1);
         $this->assertSame('2017-03-31', $response['race_date']);
         $this->assertSame(24, $response['race_stadium_code']);
         $this->assertSame(1, $response['race_code']);
@@ -99,9 +99,9 @@ class ResultCrawlerTest extends TestCase
     /**
      * @return void
      */
-    public function testCrawlWithDate20191014AndRaceStadiumCode2AndRaceCode1(): void
+    public function testScrapeWithDate20191014AndRaceStadiumCode2AndRaceCode1(): void
     {
-        $response = $this->crawler->crawl(Carbon::parse('2019-10-14'), 2, 1);
+        $response = $this->scraper->scrape(Carbon::parse('2019-10-14'), 2, 1);
         $this->assertSame('2019-10-14', $response['race_date']);
         $this->assertSame(2, $response['race_stadium_code']);
         $this->assertSame(1, $response['race_code']);
