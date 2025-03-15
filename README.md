@@ -19,25 +19,25 @@ require __DIR__ . '/vendor/autoload.php';
 
 use BVP\BoatraceScraper\Scraper;
 
-var_dump(Scraper::programs('2017-03-31'));        // 2017年03月31日の出走表
-var_dump(Scraper::programs('2017-03-31', 24));    // 2017年03月31日 大村の出走表
-var_dump(Scraper::programs('2017-03-31', 24, 1)); // 2017年03月31日 大村 1Rの出走表
+var_dump(Scraper::scrapePrograms('2017-03-31'));        // 2017年03月31日の出走表
+var_dump(Scraper::scrapePrograms('2017-03-31', 24));    // 2017年03月31日 大村の出走表
+var_dump(Scraper::scrapePrograms('2017-03-31', 24, 1)); // 2017年03月31日 大村 1Rの出走表
 
-var_dump(Scraper::previews('2017-03-31'));        // 2017年03月31日の直前情報
-var_dump(Scraper::previews('2017-03-31', 24));    // 2017年03月31日 大村の直前情報
-var_dump(Scraper::previews('2017-03-31', 24, 1)); // 2017年03月31日 大村 1Rの直前情報
+var_dump(Scraper::scrapePreviews('2017-03-31'));        // 2017年03月31日の直前情報
+var_dump(Scraper::scrapePreviews('2017-03-31', 24));    // 2017年03月31日 大村の直前情報
+var_dump(Scraper::scrapePreviews('2017-03-31', 24, 1)); // 2017年03月31日 大村 1Rの直前情報
 
-var_dump(Scraper::results('2017-03-31'));         // 2017年03月31日の結果
-var_dump(Scraper::results('2017-03-31', 24));     // 2017年03月31日 大村の結果
-var_dump(Scraper::results('2017-03-31', 24, 1));  // 2017年03月31日 大村 1Rの結果
+var_dump(Scraper::scrapeResults('2017-03-31'));         // 2017年03月31日の結果
+var_dump(Scraper::scrapeResults('2017-03-31', 24));     // 2017年03月31日 大村の結果
+var_dump(Scraper::scrapeResults('2017-03-31', 24, 1));  // 2017年03月31日 大村 1Rの結果
 
-var_dump(Scraper::oddses('2017-03-31'));          // 2017年03月31日のオッズ
-var_dump(Scraper::oddses('2017-03-31', 24));      // 2017年03月31日 大村のオッズ
-var_dump(Scraper::oddses('2017-03-31', 24, 1));   // 2017年03月31日 大村 1Rのオッズ
+var_dump(Scraper::scrapeOddses('2017-03-31'));          // 2017年03月31日のオッズ
+var_dump(Scraper::scrapeOddses('2017-03-31', 24));      // 2017年03月31日 大村のオッズ
+var_dump(Scraper::scrapeOddses('2017-03-31', 24, 1));   // 2017年03月31日 大村 1Rのオッズ
 
-var_dump(Scraper::stadiums('2017-03-31'));        // 2017年03月31日の開催場
-var_dump(Scraper::stadiumIds('2017-03-31'));      // 2017年03月31日の開催場
-var_dump(Scraper::stadiumNames('2017-03-31'));    // 2017年03月31日の開催場
+var_dump(Scraper::scrapeStadiums('2017-03-31'));        // 2017年03月31日の開催場
+var_dump(Scraper::scrapeStadiumIds('2017-03-31'));      // 2017年03月31日の開催場
+var_dump(Scraper::scrapeStadiumNames('2017-03-31'));    // 2017年03月31日の開催場
 ```
 
 ## License
