@@ -31,13 +31,13 @@ class ScraperCore implements ScraperCoreInterface
      * @var array
      */
     private array $scraperClasses = [
-        'oddses' => OddsScraper::class,
-        'previews' => PreviewScraper::class,
-        'programs' => ProgramScraper::class,
-        'results' => ResultScraper::class,
-        'stadiumIds' => StadiumScraper::class,
-        'stadiumNames' => StadiumScraper::class,
-        'stadiums' => StadiumScraper::class,
+        'scrapeOddses' => OddsScraper::class,
+        'scrapePreviews' => PreviewScraper::class,
+        'scrapePrograms' => ProgramScraper::class,
+        'scrapeResults' => ResultScraper::class,
+        'scrapeStadiumIds' => StadiumScraper::class,
+        'scrapeStadiumNames' => StadiumScraper::class,
+        'scrapeStadiums' => StadiumScraper::class,
     ];
 
     /**
@@ -74,10 +74,10 @@ class ScraperCore implements ScraperCoreInterface
         $scraper = $this->getScraperInstance($name);
         $carbonDate = Carbon::parse($date);
 
-        if (str_starts_with($name, 'stadium')) {
+        if (str_starts_with($name, 'scrapeStadium')) {
             $methodName = match ($name) {
-                'stadiumIds' => 'scrapeIds',
-                'stadiumNames' => 'scrapeNames',
+                'scrapeStadiumIds' => 'scrapeIds',
+                'scrapeStadiumNames' => 'scrapeNames',
                 default => 'scrape',
             };
             $response = $scraper->$methodName($carbonDate);
@@ -156,7 +156,7 @@ class ScraperCore implements ScraperCoreInterface
     private function getRaceStadiumCodes(CarbonInterface $carbonDate, string|int|null $raceStadiumCode): array
     {
         if (is_null($raceStadiumCode)) {
-            return $this->getScraperInstance('stadiums')->scrapeIds($carbonDate);
+            return $this->getScraperInstance('scrapeStadiums')->scrapeIds($carbonDate);
         }
 
         $formattedRaceStadiumCode = Converter::string($raceStadiumCode);
