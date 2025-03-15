@@ -12,7 +12,7 @@ use Symfony\Component\BrowserKit\HttpBrowser;
 /**
  * @author shimomo
  */
-class PreviewScraperTest extends TestCase
+final class PreviewScraperTest extends TestCase
 {
     /**
      * @var \BVP\BoatraceScraper\Scrapers\PreviewScraper

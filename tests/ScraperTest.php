@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author shimomo
  */
-class ScraperTest extends TestCase
+final class ScraperTest extends TestCase
 {
     /**
      * @var array

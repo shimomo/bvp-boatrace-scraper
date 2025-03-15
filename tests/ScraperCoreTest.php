@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author shimomo
  */
-class ScraperCoreTest extends TestCase
+final class ScraperCoreTest extends TestCase
 {
     /**
      * @var \BVP\BoatraceScraper\ScraperCore
