@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BVP\BoatraceScraper;
 
-use Illuminate\Support\Collection;
-
 /**
  * @author shimomo
  */
@@ -14,16 +12,16 @@ interface ScraperInterface extends ScraperContractInterface
     /**
      * @param  string  $name
      * @param  array   $arguments
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function __call(string $name, array $arguments): Collection;
+    public function __call(string $name, array $arguments): array;
 
     /**
      * @param  string  $name
      * @param  array   $arguments
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public static function __callStatic(string $name, array $arguments): Collection;
+    public static function __callStatic(string $name, array $arguments): array;
 
     /**
      * @param  \BVP\BoatraceScraper\ScraperCoreInterface|null  $scraperCore

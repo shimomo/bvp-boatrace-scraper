@@ -13,7 +13,6 @@ use BVP\BoatraceScraper\Scrapers\ResultScraper;
 use BVP\BoatraceScraper\Scrapers\StadiumScraper;
 use Carbon\CarbonImmutable as Carbon;
 use Carbon\CarbonInterface;
-use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Symfony\Component\BrowserKit\HttpBrowser;
 
@@ -41,23 +40,11 @@ class ScraperCore implements ScraperCoreInterface
     ];
 
     /**
-     * @return void
-     */
-    public function __construct()
-    {
-        Collection::macro('recursive', fn() => $this->map(
-            fn($value) => is_array($value) || is_object($value)
-                ? collect($value)->recursive()
-                : $value
-        ));
-    }
-
-    /**
      * @param  string  $name
      * @param  array   $arguments
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function __call(string $name, array $arguments): Collection
+    public function __call(string $name, array $arguments): array
     {
         return $this->scraper($name, ...$arguments);
     }
@@ -67,9 +54,9 @@ class ScraperCore implements ScraperCoreInterface
      * @param  \Carbon\CarbonInterface|string  $date
      * @param  string|int|null                 $raceStadiumCode
      * @param  string|int|null                 $raceCode
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    private function scraper(string $name, CarbonInterface|string $date, string|int|null $raceStadiumCode = null, string|int|null $raceCode = null): Collection
+    private function scraper(string $name, CarbonInterface|string $date, string|int|null $raceStadiumCode = null, string|int|null $raceCode = null): array
     {
         $scraper = $this->getScraperInstance($name);
         $carbonDate = Carbon::parse($date);
@@ -81,7 +68,7 @@ class ScraperCore implements ScraperCoreInterface
                 default => 'scrape',
             };
             $response = $scraper->$methodName($carbonDate);
-            return collect($response)->recursive();
+            return $response;
         }
 
         $raceStadiumCodes = $this->getRaceStadiumCodes($carbonDate, $raceStadiumCode);
@@ -98,7 +85,7 @@ class ScraperCore implements ScraperCoreInterface
             }
         }
 
-        return collect($response)->recursive();
+        return $response;
     }
 
     /**

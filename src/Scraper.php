@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BVP\BoatraceScraper;
 
-use Illuminate\Support\Collection;
-
 /**
  * @author shimomo
  */
@@ -25,9 +23,9 @@ class Scraper implements ScraperInterface
     /**
      * @param  string  $name
      * @param  array   $arguments
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function __call(string $name, array $arguments): Collection
+    public function __call(string $name, array $arguments): array
     {
         return $this->scraper->$name(...$arguments);
     }
@@ -35,9 +33,9 @@ class Scraper implements ScraperInterface
     /**
      * @param  string  $name
      * @param  array   $arguments
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public static function __callStatic(string $name, array $arguments): Collection
+    public static function __callStatic(string $name, array $arguments): array
     {
         return self::getInstance()->$name(...$arguments);
     }
