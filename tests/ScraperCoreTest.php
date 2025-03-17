@@ -38,6 +38,7 @@ final class ScraperCoreTest extends TestCase
     {
         $this->scraper = new ScraperCore();
     }
+
     /**
      * @return void
      */
