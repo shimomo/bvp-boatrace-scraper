@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BVP\BoatraceScraper\Tests;
 
 use BVP\BoatraceScraper\Scraper;
+use BVP\BoatraceScraper\ScraperInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -903,5 +904,35 @@ final class ScraperTest extends TestCase
     public function testStadiumNamesWithDate20170331(): void
     {
         $this->assertSame(array_values($this->stadiums), Scraper::scrapeStadiumNames('2017-03-31'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetInstance(): void
+    {
+        Scraper::resetInstance();
+        $this->assertInstanceOf(ScraperInterface::class, Scraper::getInstance());
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateInstance(): void
+    {
+        Scraper::resetInstance();
+        $this->assertInstanceOf(ScraperInterface::class, Scraper::createInstance());
+    }
+
+    /**
+     * @return void
+     */
+    public function testResetInstance(): void
+    {
+        Scraper::resetInstance();
+        $instance1 = Scraper::getInstance();
+        Scraper::resetInstance();
+        $instance2 = Scraper::getInstance();
+        $this->assertNotSame($instance1, $instance2);
     }
 }
