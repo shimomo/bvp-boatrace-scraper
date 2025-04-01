@@ -41,7 +41,7 @@ final class PreviewScraperTest extends TestCase
         $this->assertSame(7, $response['race_wind']);
         $this->assertSame(11, $response['race_wind_direction_number']);
         $this->assertSame(6, $response['race_wave']);
-        $this->assertSame(2, $response['race_weather_id']);
+        $this->assertSame(2, $response['race_weather_number']);
         $this->assertSame(13.0, $response['race_temperature']);
         $this->assertSame(14.0, $response['race_water_temperature']);
         $this->assertSame(1, $response['boats'][1]['racer_boat_number']);
@@ -106,7 +106,7 @@ final class PreviewScraperTest extends TestCase
         $this->assertNull($response['race_wind']);
         $this->assertNull($response['race_wind_direction_number']);
         $this->assertNull($response['race_wave']);
-        $this->assertNull($response['race_weather_id']);
+        $this->assertNull($response['race_weather_number']);
         $this->assertNull($response['race_temperature']);
         $this->assertNull($response['race_water_temperature']);
         $this->assertSame(1, $response['boats'][1]['racer_boat_number']);

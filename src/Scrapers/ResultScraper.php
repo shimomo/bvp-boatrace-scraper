@@ -79,7 +79,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $response['race_wind'] = $raceWind;
         $response['race_wind_direction_number'] = $raceWindDirectionNumber;
         $response['race_wave'] = $raceWave;
-        $response['race_weather_id'] = $raceWeatherId;
+        $response['race_weather_number'] = $raceWeatherId;
         $response['race_temperature'] = $raceTemperature;
         $response['race_water_temperature'] = $raceWaterTemperature;
         $response['race_technique_id'] = $raceTechniqueId;
