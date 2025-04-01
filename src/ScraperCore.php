@@ -52,11 +52,11 @@ class ScraperCore implements ScraperCoreInterface
     /**
      * @param  string                          $name
      * @param  \Carbon\CarbonInterface|string  $date
-     * @param  string|int|null                 $raceStadiumCode
+     * @param  string|int|null                 $raceStadiumNumber
      * @param  string|int|null                 $raceCode
      * @return array
      */
-    private function scraper(string $name, CarbonInterface|string $date, string|int|null $raceStadiumCode = null, string|int|null $raceCode = null): array
+    private function scraper(string $name, CarbonInterface|string $date, string|int|null $raceStadiumNumber = null, string|int|null $raceCode = null): array
     {
         $scraper = $this->getScraperInstance($name);
         $carbonDate = Carbon::parse($date);
@@ -71,15 +71,15 @@ class ScraperCore implements ScraperCoreInterface
             return $response;
         }
 
-        $raceStadiumCodes = $this->getRaceStadiumCodes($carbonDate, $raceStadiumCode);
+        $raceStadiumNumbers = $this->getRaceStadiumCodes($carbonDate, $raceStadiumNumber);
         $raceCodes = $this->getRaceCodes($raceCode);
 
         $response = [];
-        foreach ($raceStadiumCodes as $raceStadiumCode) {
+        foreach ($raceStadiumNumbers as $raceStadiumNumber) {
             foreach ($raceCodes as $raceCode) {
-                $response[$raceStadiumCode][$raceCode] = $scraper->scrape(
+                $response[$raceStadiumNumber][$raceCode] = $scraper->scrape(
                     $carbonDate,
-                    $raceStadiumCode,
+                    $raceStadiumNumber,
                     $raceCode
                 );
             }
@@ -135,24 +135,24 @@ class ScraperCore implements ScraperCoreInterface
 
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
-     * @param  string|int|null          $raceStadiumCode
+     * @param  string|int|null          $raceStadiumNumber
      * @return array
      *
      * @throws \InvalidArgumentException
      */
-    private function getRaceStadiumCodes(CarbonInterface $carbonDate, string|int|null $raceStadiumCode): array
+    private function getRaceStadiumCodes(CarbonInterface $carbonDate, string|int|null $raceStadiumNumber): array
     {
-        if (is_null($raceStadiumCode)) {
+        if (is_null($raceStadiumNumber)) {
             return $this->getScraperInstance('scrapeStadiums')->scrapeIds($carbonDate);
         }
 
-        $formattedRaceStadiumCode = Converter::string($raceStadiumCode);
+        $formattedRaceStadiumCode = Converter::string($raceStadiumNumber);
         if (preg_match('/\b(0?[1-9]|1[0-9]|2[0-4])\b/', $formattedRaceStadiumCode, $matches)) {
             return [(int) $matches[1]];
         }
 
         throw new InvalidArgumentException(
-            __METHOD__ . "The race stadium code for '{$raceStadiumCode}' is invalid."
+            __METHOD__ . "The race stadium code for '{$raceStadiumNumber}' is invalid."
         );
     }
 

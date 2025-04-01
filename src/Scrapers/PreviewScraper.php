@@ -20,16 +20,16 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
 
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
-     * @param  int                      $raceStadiumCode
+     * @param  int                      $raceStadiumNumber
      * @param  int                      $raceCode
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
         $scraperFormat = '%s/owpc/pc/race/beforeinfo?hd=%s&jcd=%02d&rno=%d';
-        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
+        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceCode);
         $scraper = $this->httpBrowser->request('GET', $scraperUrl);
         sleep($this->seconds);
 
@@ -70,7 +70,7 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
         $raceWaterTemperature = Converter::temperature($raceWaterTemperature);
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
-        $response['race_stadium_number'] = $raceStadiumCode;
+        $response['race_stadium_number'] = $raceStadiumNumber;
         $response['race_code'] = $raceCode;
         $response['race_wind'] = $raceWind;
         $response['race_wind_direction_id'] = $raceWindDirectionId;
@@ -79,19 +79,19 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
         $response['race_temperature'] = $raceTemperature;
         $response['race_water_temperature'] = $raceWaterTemperature;
 
-        $response += $this->scrapeBoats($scraper, $raceStadiumCode, $raceCode);
-        $response += $this->scrapeCourses($scraper, $raceStadiumCode, $raceCode);
+        $response += $this->scrapeBoats($scraper, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapeCourses($scraper, $raceStadiumNumber, $raceCode);
 
         return $response;
     }
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapeBoats(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapeBoats(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
@@ -132,11 +132,11 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapeCourses(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapeCourses(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 

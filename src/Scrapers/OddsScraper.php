@@ -19,36 +19,36 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
 
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
-     * @param  int                      $raceStadiumCode
+     * @param  int                      $raceStadiumNumber
      * @param  int                      $raceCode
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
         $scraper1Format = '%s/owpc/pc/race/oddstf?hd=%s&jcd=%02d&rno=%d';
-        $scraper1Url = sprintf($scraper1Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
+        $scraper1Url = sprintf($scraper1Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceCode);
         $scraper1 = $this->httpBrowser->request('GET', $scraper1Url);
         sleep($this->seconds);
 
         $scraper2Format = '%s/owpc/pc/race/odds2tf?hd=%s&jcd=%02d&rno=%d';
-        $scraper2Url = sprintf($scraper2Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
+        $scraper2Url = sprintf($scraper2Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceCode);
         $scraper2 = $this->httpBrowser->request('GET', $scraper2Url);
         sleep($this->seconds);
 
         $scraper3Format = '%s/owpc/pc/race/oddsk?hd=%s&jcd=%02d&rno=%d';
-        $scraper3Url = sprintf($scraper3Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
+        $scraper3Url = sprintf($scraper3Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceCode);
         $scraper3 = $this->httpBrowser->request('GET', $scraper3Url);
         sleep($this->seconds);
 
         $scraper4Format = '%s/owpc/pc/race/odds3t?hd=%s&jcd=%02d&rno=%d';
-        $scraper4Url = sprintf($scraper4Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
+        $scraper4Url = sprintf($scraper4Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceCode);
         $scraper4 = $this->httpBrowser->request('GET', $scraper4Url);
         sleep($this->seconds);
 
         $scraper5Format = '%s/owpc/pc/race/odds3f?hd=%s&jcd=%02d&rno=%d';
-        $scraper5Url = sprintf($scraper5Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumCode, $raceCode);
+        $scraper5Url = sprintf($scraper5Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceCode);
         $scraper5 = $this->httpBrowser->request('GET', $scraper5Url);
         sleep($this->seconds);
 
@@ -61,27 +61,27 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
         }
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
-        $response['race_stadium_number'] = $raceStadiumCode;
+        $response['race_stadium_number'] = $raceStadiumNumber;
         $response['race_code'] = $raceCode;
 
-        $response += $this->scrapeWin($scraper1, $raceStadiumCode, $raceCode);
-        $response += $this->scrapePlace($scraper1, $raceStadiumCode, $raceCode);
-        $response += $this->scrapeExacta($scraper2, $raceStadiumCode, $raceCode);
-        $response += $this->scrapeQuinella($scraper2, $raceStadiumCode, $raceCode);
-        $response += $this->scrapeQuinellaPlace($scraper3, $raceStadiumCode, $raceCode);
-        $response += $this->scrapeTrifecta($scraper4, $raceStadiumCode, $raceCode);
-        $response += $this->scrapeTrio($scraper5, $raceStadiumCode, $raceCode);
+        $response += $this->scrapeWin($scraper1, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapePlace($scraper1, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapeExacta($scraper2, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapeQuinella($scraper2, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapeQuinellaPlace($scraper3, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapeTrifecta($scraper4, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapeTrio($scraper5, $raceStadiumNumber, $raceCode);
 
         return $response;
     }
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapeWin(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapeWin(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
@@ -104,11 +104,11 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapePlace(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapePlace(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
@@ -131,11 +131,11 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapeExacta(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapeExacta(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
@@ -206,11 +206,11 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapeQuinella(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapeQuinella(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
@@ -251,11 +251,11 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapeQuinellaPlace(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapeQuinellaPlace(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
@@ -296,11 +296,11 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapeTrifecta(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapeTrifecta(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 
@@ -551,11 +551,11 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
 
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumCode
+     * @param  int                                    $raceStadiumNumber
      * @param  int                                    $raceCode
      * @return array
      */
-    private function scrapeTrio(Crawler $scraper, int $raceStadiumCode, int $raceCode): array
+    private function scrapeTrio(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
     {
         $response = [];
 

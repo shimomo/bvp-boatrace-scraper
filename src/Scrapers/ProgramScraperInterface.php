@@ -14,9 +14,9 @@ interface ProgramScraperInterface extends ScraperContractInterface
 {
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
-     * @param  int                      $raceStadiumCode
+     * @param  int                      $raceStadiumNumber
      * @param  int                      $raceCode
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate, int $raceStadiumCode, int $raceCode): array;
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceCode): array;
 }
