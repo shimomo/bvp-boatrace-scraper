@@ -1,7 +1,7 @@
-# Boatrace Scraper
+# BVP Boatrace Scraper
 
-[![Build Status](https://github.com/BoatraceVentureProject/BoatraceScraper/workflows/Tests/badge.svg)](https://github.com/BoatraceVentureProject/BoatraceScraper/actions?query=workflow%3Atests)
-[![codecov](https://codecov.io/gh/BoatraceVentureProject/BoatraceScraper/graph/badge.svg?token=Tt8DGtX4fc)](https://codecov.io/gh/BoatraceVentureProject/BoatraceScraper)
+[![Build Status](https://github.com/shimomo/bvp-boatrace-scraper/workflows/Tests/badge.svg)](https://github.com/shimomo/bvp-boatrace-scraper/actions?query=workflow%3Atests)
+[![codecov](https://codecov.io/gh/shimomo/bvp-boatrace-scraper/graph/badge.svg?token=1J6TVAC5FR)](https://codecov.io/gh/shimomo/bvp-boatrace-scraper)
 [![Latest Stable Version](https://poser.pugx.org/bvp/boatrace-scraper/v/stable)](https://packagist.org/packages/bvp/boatrace-scraper)
 [![Latest Unstable Version](https://poser.pugx.org/bvp/boatrace-scraper/v/unstable)](https://packagist.org/packages/bvp/boatrace-scraper)
 [![License](https://poser.pugx.org/bvp/boatrace-scraper/license)](https://packagist.org/packages/bvp/boatrace-scraper)
