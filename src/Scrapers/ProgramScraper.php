@@ -129,7 +129,7 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             $response['boats'][$racerBoatNumber]['racer_boat_number'] = $racerBoatNumber;
             $response['boats'][$racerBoatNumber]['racer_name'] = $racerName;
             $response['boats'][$racerBoatNumber]['racer_number'] = $racerNumber;
-            $response['boats'][$racerBoatNumber]['racer_class_id'] = $racerClassId;
+            $response['boats'][$racerBoatNumber]['racer_class_number'] = $racerClassId;
             $response['boats'][$racerBoatNumber]['racer_branch_id'] = $racerBranchId;
             $response['boats'][$racerBoatNumber]['racer_birthplace_id'] = $racerBirthplaceId;
             $response['boats'][$racerBoatNumber]['racer_age'] = $racerAge;
