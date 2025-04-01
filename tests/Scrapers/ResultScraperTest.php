@@ -44,7 +44,7 @@ final class ResultScraperTest extends TestCase
         $this->assertSame(3, $response['race_weather_number']);
         $this->assertSame(13.0, $response['race_temperature']);
         $this->assertSame(14.0, $response['race_water_temperature']);
-        $this->assertSame(1, $response['race_technique_id']);
+        $this->assertSame(1, $response['race_technique_number']);
         $this->assertSame(1, $response['places'][1]['racer_place_id']);
         $this->assertSame(2, $response['places'][2]['racer_place_id']);
         $this->assertSame(3, $response['places'][3]['racer_place_id']);
@@ -111,7 +111,7 @@ final class ResultScraperTest extends TestCase
         $this->assertNull($response['race_weather_number']);
         $this->assertNull($response['race_temperature']);
         $this->assertNull($response['race_water_temperature']);
-        $this->assertNull($response['race_technique_id']);
+        $this->assertNull($response['race_technique_number']);
         $this->assertSame(1, $response['places'][1]['racer_place_id']);
         $this->assertSame(2, $response['places'][2]['racer_place_id']);
         $this->assertSame(3, $response['places'][3]['racer_place_id']);

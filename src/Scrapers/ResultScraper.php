@@ -82,7 +82,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $response['race_weather_number'] = $raceWeatherNumber;
         $response['race_temperature'] = $raceTemperature;
         $response['race_water_temperature'] = $raceWaterTemperature;
-        $response['race_technique_id'] = $raceTechniqueId;
+        $response['race_technique_number'] = $raceTechniqueId;
 
         $response += $this->scrapeCourses($scraper, $raceStadiumNumber, $raceNumber);
         $response += $this->scrapePlaces($scraper, $raceStadiumNumber, $raceNumber);
