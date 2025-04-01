@@ -22,15 +22,15 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
      * @param  int                      $raceStadiumNumber
-     * @param  int                      $raceCode
+     * @param  int                      $raceNumber
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceCode): array
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceNumber): array
     {
         $response = [];
 
         $scraperFormat = '%s/owpc/pc/race/racelist?hd=%s&jcd=%02d&rno=%d';
-        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceCode);
+        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
         $scraper = $this->httpBrowser->request('GET', $scraperUrl);
         sleep($this->seconds);
 
@@ -48,7 +48,7 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
 
         $raceTitleXPath = sprintf($raceTitleFormat, $this->baseXPath);
         $raceSubtitleDistanceXPath = sprintf($raceSubtitleDistanceFormat, $this->baseXPath, $this->baseLevel + 3);
-        $raceDeadlineXPath = sprintf($raceDeadlineFormat, $this->baseXPath, $raceCode + 1);
+        $raceDeadlineXPath = sprintf($raceDeadlineFormat, $this->baseXPath, $raceNumber + 1);
 
         $raceTitle = $this->filterXPath($scraper, $raceTitleXPath);
         $raceSubtitleDistance = $this->filterXPath($scraper, $raceSubtitleDistanceXPath);
@@ -63,13 +63,13 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
-        $response['race_number'] = $raceCode;
+        $response['race_number'] = $raceNumber;
         $response['race_closed_at'] = $raceClosedAt;
         $response['race_title'] = $raceTitle;
         $response['race_subtitle'] = $raceSubtitle;
         $response['race_distance'] = $raceDistance;
 
-        $response += $this->scrapeBoats($scraper, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapeBoats($scraper, $raceStadiumNumber, $raceNumber);
 
         return $response;
     }
@@ -77,10 +77,10 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  int                                    $raceStadiumNumber
-     * @param  int                                    $raceCode
+     * @param  int                                    $raceNumber
      * @return array
      */
-    private function scrapeBoats(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
+    private function scrapeBoats(Crawler $scraper, int $raceStadiumNumber, int $raceNumber): array
     {
         $response = [];
 

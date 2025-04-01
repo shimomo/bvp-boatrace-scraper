@@ -21,15 +21,15 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
      * @param  int                      $raceStadiumNumber
-     * @param  int                      $raceCode
+     * @param  int                      $raceNumber
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceCode): array
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceNumber): array
     {
         $response = [];
 
         $scraperFormat = '%s/owpc/pc/race/raceresult?hd=%s&jcd=%02d&rno=%d';
-        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceCode);
+        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
         $scraper = $this->httpBrowser->request('GET', $scraperUrl);
         sleep($this->seconds);
 
@@ -75,7 +75,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
-        $response['race_number'] = $raceCode;
+        $response['race_number'] = $raceNumber;
         $response['race_wind'] = $raceWind;
         $response['race_wind_direction_id'] = $raceWindDirectionId;
         $response['race_wave'] = $raceWave;
@@ -84,9 +84,9 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $response['race_water_temperature'] = $raceWaterTemperature;
         $response['race_technique_id'] = $raceTechniqueId;
 
-        $response += $this->scrapeCourses($scraper, $raceStadiumNumber, $raceCode);
-        $response += $this->scrapePlaces($scraper, $raceStadiumNumber, $raceCode);
-        $response += $this->scrapeRefunds($scraper, $raceStadiumNumber, $raceCode);
+        $response += $this->scrapeCourses($scraper, $raceStadiumNumber, $raceNumber);
+        $response += $this->scrapePlaces($scraper, $raceStadiumNumber, $raceNumber);
+        $response += $this->scrapeRefunds($scraper, $raceStadiumNumber, $raceNumber);
 
         return $response;
     }
@@ -94,10 +94,10 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  int                                    $raceStadiumNumber
-     * @param  int                                    $raceCode
+     * @param  int                                    $raceNumber
      * @return array
      */
-    private function scrapeCourses(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
+    private function scrapeCourses(Crawler $scraper, int $raceStadiumNumber, int $raceNumber): array
     {
         $response = [];
 
@@ -125,10 +125,10 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  int                                    $raceStadiumNumber
-     * @param  int                                    $raceCode
+     * @param  int                                    $raceNumber
      * @return array
      */
-    private function scrapePlaces(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
+    private function scrapePlaces(Crawler $scraper, int $raceStadiumNumber, int $raceNumber): array
     {
         $response = [];
 
@@ -165,10 +165,10 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
     /**
      * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
      * @param  int                                    $raceStadiumNumber
-     * @param  int                                    $raceCode
+     * @param  int                                    $raceNumber
      * @return array
      */
-    private function scrapeRefunds(Crawler $scraper, int $raceStadiumNumber, int $raceCode): array
+    private function scrapeRefunds(Crawler $scraper, int $raceStadiumNumber, int $raceNumber): array
     {
         $response = [];
 

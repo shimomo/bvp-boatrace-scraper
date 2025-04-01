@@ -53,10 +53,10 @@ class ScraperCore implements ScraperCoreInterface
      * @param  string                          $name
      * @param  \Carbon\CarbonInterface|string  $date
      * @param  string|int|null                 $raceStadiumNumber
-     * @param  string|int|null                 $raceCode
+     * @param  string|int|null                 $raceNumber
      * @return array
      */
-    private function scraper(string $name, CarbonInterface|string $date, string|int|null $raceStadiumNumber = null, string|int|null $raceCode = null): array
+    private function scraper(string $name, CarbonInterface|string $date, string|int|null $raceStadiumNumber = null, string|int|null $raceNumber = null): array
     {
         $scraper = $this->getScraperInstance($name);
         $carbonDate = Carbon::parse($date);
@@ -72,15 +72,15 @@ class ScraperCore implements ScraperCoreInterface
         }
 
         $raceStadiumNumbers = $this->getRaceStadiumCodes($carbonDate, $raceStadiumNumber);
-        $raceCodes = $this->getRaceCodes($raceCode);
+        $raceNumbers = $this->getRaceCodes($raceNumber);
 
         $response = [];
         foreach ($raceStadiumNumbers as $raceStadiumNumber) {
-            foreach ($raceCodes as $raceCode) {
-                $response[$raceStadiumNumber][$raceCode] = $scraper->scrape(
+            foreach ($raceNumbers as $raceNumber) {
+                $response[$raceStadiumNumber][$raceNumber] = $scraper->scrape(
                     $carbonDate,
                     $raceStadiumNumber,
-                    $raceCode
+                    $raceNumber
                 );
             }
         }
@@ -157,24 +157,24 @@ class ScraperCore implements ScraperCoreInterface
     }
 
     /**
-     * @param  string|int|null  $raceCode
+     * @param  string|int|null  $raceNumber
      * @return array
      *
      * @throws \InvalidArgumentException
      */
-    private function getRaceCodes(string|int|null $raceCode): array
+    private function getRaceCodes(string|int|null $raceNumber): array
     {
-        if (is_null($raceCode)) {
+        if (is_null($raceNumber)) {
             return range(1, 12);
         }
 
-        $formattedRaceCode = Converter::string($raceCode);
+        $formattedRaceCode = Converter::string($raceNumber);
         if (preg_match('/\b(0?[1-9]|1[0-2])\b/', $formattedRaceCode, $matches)) {
             return [(int) $matches[1]];
         }
 
         throw new InvalidArgumentException(
-            __METHOD__ . "() - The race code for '{$raceCode}' is invalid."
+            __METHOD__ . "() - The race code for '{$raceNumber}' is invalid."
         );
     }
 }

@@ -15,8 +15,8 @@ interface OddsScraperInterface extends ScraperContractInterface
     /**
      * @param  \Carbon\CarbonInterface  $carbonDate
      * @param  int                      $raceStadiumNumber
-     * @param  int                      $raceCode
+     * @param  int                      $raceNumber
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceCode): array;
+    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceNumber): array;
 }
