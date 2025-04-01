@@ -119,7 +119,7 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             $racerName = Converter::name($racerName);
 
             [$racerNumber, $racerClassNumber] = $this->explodeNumberClass($racerNumberClass);
-            [$racerBranchId, $racerBirthplaceId, $racerAge, $racerWeight] = $this->explodeBranchBirthplaceAgeWeight($racerBranchBirthplaceAgeWeight);
+            [$racerBranchNumber, $racerBirthplaceId, $racerAge, $racerWeight] = $this->explodeBranchBirthplaceAgeWeight($racerBranchBirthplaceAgeWeight);
             [$racerFlyingCount, $racerLateCount, $racerAverageStartTiming] = $this->explodeFlyingLateStartTiming($racerFlyingLateStartTiming);
             [$racerNationalTop1Percent, $racerNationalTop2Percent, $racerNationalTop3Percent] = $this->explodeNationalTop123Percent($racerNationalTop123Percent);
             [$racerLocalTop1Percent, $racerLocalTop2Percent, $racerLocalTop3Percent] = $this->explodeLocalTop123Percent($racerLocalTop123Percent);
@@ -130,7 +130,7 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             $response['boats'][$racerBoatNumber]['racer_name'] = $racerName;
             $response['boats'][$racerBoatNumber]['racer_number'] = $racerNumber;
             $response['boats'][$racerBoatNumber]['racer_class_number'] = $racerClassNumber;
-            $response['boats'][$racerBoatNumber]['racer_branch_number'] = $racerBranchId;
+            $response['boats'][$racerBoatNumber]['racer_branch_number'] = $racerBranchNumber;
             $response['boats'][$racerBoatNumber]['racer_birthplace_id'] = $racerBirthplaceId;
             $response['boats'][$racerBoatNumber]['racer_age'] = $racerAge;
             $response['boats'][$racerBoatNumber]['racer_weight'] = $racerWeight;
