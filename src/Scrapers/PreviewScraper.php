@@ -71,7 +71,7 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
-        $response['race_code'] = $raceCode;
+        $response['race_number'] = $raceCode;
         $response['race_wind'] = $raceWind;
         $response['race_wind_direction_id'] = $raceWindDirectionId;
         $response['race_wave'] = $raceWave;

@@ -63,7 +63,7 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
-        $response['race_code'] = $raceCode;
+        $response['race_number'] = $raceCode;
         $response['race_closed_at'] = $raceClosedAt;
         $response['race_title'] = $raceTitle;
         $response['race_subtitle'] = $raceSubtitle;
