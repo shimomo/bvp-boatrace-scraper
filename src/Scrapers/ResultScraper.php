@@ -42,7 +42,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         }
 
         $raceWindFormat = '%s/div[2]/div[%s]/div[2]/div[1]/div[1]/div/div[1]/div[3]/div/span[2]';
-        $raceWindDirectionIdFormat = '%s/div[2]/div[%s]/div[2]/div[1]/div[1]/div/div[1]/div[4]/p';
+        $raceWindDirectionNumberFormat = '%s/div[2]/div[%s]/div[2]/div[1]/div[1]/div/div[1]/div[4]/p';
         $raceWaveFormat = '%s/div[2]/div[%s]/div[2]/div[1]/div[1]/div/div[1]/div[6]/div/span[2]';
         $raceWeatherNameFormat = '%s/div[2]/div[%s]/div[2]/div[1]/div[1]/div/div[1]/div[2]/div/span';
         $raceTemperatureFormat = '%s/div[2]/div[%s]/div[2]/div[1]/div[1]/div/div[1]/div[1]/div/span[2]';
@@ -50,7 +50,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $raceTechniqueNameFormat = '%s/div[2]/div[%s]/div[2]/div[1]/div[2]/div[2]/table/tbody/tr/td';
 
         $raceWindXPath = sprintf($raceWindFormat, $this->baseXPath, $this->baseLevel + 6);
-        $raceWindDirectionIdXPath = sprintf($raceWindDirectionIdFormat, $this->baseXPath, $this->baseLevel + 6);
+        $raceWindDirectionNumberXPath = sprintf($raceWindDirectionNumberFormat, $this->baseXPath, $this->baseLevel + 6);
         $raceWaveXPath = sprintf($raceWaveFormat, $this->baseXPath, $this->baseLevel + 6);
         $raceWeatherNameXPath = sprintf($raceWeatherNameFormat, $this->baseXPath, $this->baseLevel + 6);
         $raceTemperatureXPath = sprintf($raceTemperatureFormat, $this->baseXPath, $this->baseLevel + 6);
@@ -58,7 +58,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $raceTechniqueNameXPath = sprintf($raceTechniqueNameFormat, $this->baseXPath, $this->baseLevel + 6);
 
         $raceWind = $this->filterXPath($scraper, $raceWindXPath);
-        $raceWindDirectionId = $this->filterXPathForWindDirectionId($scraper, $raceWindDirectionIdXPath);
+        $raceWindDirectionNumber = $this->filterXPathForWindDirectionId($scraper, $raceWindDirectionNumberXPath);
         $raceWave = $this->filterXPath($scraper, $raceWaveXPath);
         $raceWeatherName = $this->filterXPath($scraper, $raceWeatherNameXPath);
         $raceTemperature = $this->filterXPath($scraper, $raceTemperatureXPath);
@@ -66,7 +66,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $raceTechniqueName = $this->filterXPath($scraper, $raceTechniqueNameXPath);
 
         $raceWind = Converter::wind($raceWind);
-        $raceWindDirectionId = Converter::windDirection($raceWindDirectionId);
+        $raceWindDirectionNumber = Converter::windDirection($raceWindDirectionNumber);
         $raceWave = Converter::wave($raceWave);
         $raceWeatherId = Converter::weatherId($raceWeatherName);
         $raceTemperature = Converter::temperature($raceTemperature);
@@ -77,7 +77,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $response['race_stadium_number'] = $raceStadiumNumber;
         $response['race_number'] = $raceNumber;
         $response['race_wind'] = $raceWind;
-        $response['race_wind_direction_number'] = $raceWindDirectionId;
+        $response['race_wind_direction_number'] = $raceWindDirectionNumber;
         $response['race_wave'] = $raceWave;
         $response['race_weather_id'] = $raceWeatherId;
         $response['race_temperature'] = $raceTemperature;
