@@ -71,7 +71,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $raceWeatherNumber = Converter::weatherId($raceWeatherName);
         $raceTemperature = Converter::temperature($raceTemperature);
         $raceWaterTemperature = Converter::temperature($raceWaterTemperature);
-        $raceTechniqueId = Converter::techniqueId($raceTechniqueName);
+        $raceTechniqueNumber = Converter::techniqueId($raceTechniqueName);
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
@@ -82,7 +82,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $response['race_weather_number'] = $raceWeatherNumber;
         $response['race_temperature'] = $raceTemperature;
         $response['race_water_temperature'] = $raceWaterTemperature;
-        $response['race_technique_number'] = $raceTechniqueId;
+        $response['race_technique_number'] = $raceTechniqueNumber;
 
         $response += $this->scrapeCourses($scraper, $raceStadiumNumber, $raceNumber);
         $response += $this->scrapePlaces($scraper, $raceStadiumNumber, $raceNumber);
