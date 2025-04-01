@@ -61,7 +61,7 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
         }
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
-        $response['race_stadium_code'] = $raceStadiumCode;
+        $response['race_stadium_number'] = $raceStadiumCode;
         $response['race_code'] = $raceCode;
 
         $response += $this->scrapeWin($scraper1, $raceStadiumCode, $raceCode);

@@ -74,7 +74,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $raceTechniqueId = Converter::techniqueId($raceTechniqueName);
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
-        $response['race_stadium_code'] = $raceStadiumCode;
+        $response['race_stadium_number'] = $raceStadiumCode;
         $response['race_code'] = $raceCode;
         $response['race_wind'] = $raceWind;
         $response['race_wind_direction_id'] = $raceWindDirectionId;

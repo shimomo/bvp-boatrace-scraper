@@ -34,7 +34,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapePrograms('2017-03-31', 24);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame('2017-03-31 12:00:00', $response[24][1]['race_closed_at']);
         $this->assertSame('おおむら桜祭り競走', $response[24][1]['race_title']);
@@ -187,7 +187,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapePrograms('2017-03-31', null, 1);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame('2017-03-31 12:00:00', $response[24][1]['race_closed_at']);
         $this->assertSame('おおむら桜祭り競走', $response[24][1]['race_title']);
@@ -340,7 +340,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapePrograms('2017-03-31', 24, 1);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame('2017-03-31 12:00:00', $response[24][1]['race_closed_at']);
         $this->assertSame('おおむら桜祭り競走', $response[24][1]['race_title']);
@@ -493,7 +493,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapePreviews('2017-03-31', 24);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame(7, $response[24][1]['race_wind']);
         $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
@@ -558,7 +558,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapePreviews('2017-03-31', null, 1);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame(7, $response[24][1]['race_wind']);
         $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
@@ -623,7 +623,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapePreviews('2017-03-31', 24, 1);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame(7, $response[24][1]['race_wind']);
         $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
@@ -688,7 +688,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapeResults('2017-03-31', 24);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame(5, $response[24][1]['race_wind']);
         $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
@@ -755,7 +755,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapeResults('2017-03-31', null, 1);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame(5, $response[24][1]['race_wind']);
         $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
@@ -822,7 +822,7 @@ final class ScraperTest extends TestCase
     {
         $response = Scraper::scrapeResults('2017-03-31', 24, 1);
         $this->assertSame('2017-03-31', $response[24][1]['race_date']);
-        $this->assertSame(24, $response[24][1]['race_stadium_code']);
+        $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_code']);
         $this->assertSame(5, $response[24][1]['race_wind']);
         $this->assertSame(11, $response[24][1]['race_wind_direction_id']);

@@ -36,7 +36,7 @@ final class OddsScraperTest extends TestCase
     {
         $response = $this->scraper->scrape(Carbon::parse('2017-03-31'), 24, 1);
         $this->assertSame('2017-03-31', $response['race_date']);
-        $this->assertSame(24, $response['race_stadium_code']);
+        $this->assertSame(24, $response['race_stadium_number']);
         $this->assertSame(1, $response['race_code']);
         $this->assertSame(1.0, $response['win_oddses'][1]);
         $this->assertSame(25.6, $response['win_oddses'][2]);
@@ -280,7 +280,7 @@ final class OddsScraperTest extends TestCase
     {
         $response = $this->scraper->scrape(Carbon::parse('2019-10-14'), 2, 1);
         $this->assertSame('2019-10-14', $response['race_date']);
-        $this->assertSame(2, $response['race_stadium_code']);
+        $this->assertSame(2, $response['race_stadium_number']);
         $this->assertSame(1, $response['race_code']);
         $this->assertNull($response['win_oddses'][1]);
         $this->assertNull($response['win_oddses'][2]);
