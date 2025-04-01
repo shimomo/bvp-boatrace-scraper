@@ -496,7 +496,7 @@ final class ScraperTest extends TestCase
         $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_number']);
         $this->assertSame(7, $response[24][1]['race_wind']);
-        $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
+        $this->assertSame(11, $response[24][1]['race_wind_direction_number']);
         $this->assertSame(6, $response[24][1]['race_wave']);
         $this->assertSame(2, $response[24][1]['race_weather_id']);
         $this->assertSame(13.0, $response[24][1]['race_temperature']);
@@ -561,7 +561,7 @@ final class ScraperTest extends TestCase
         $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_number']);
         $this->assertSame(7, $response[24][1]['race_wind']);
-        $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
+        $this->assertSame(11, $response[24][1]['race_wind_direction_number']);
         $this->assertSame(6, $response[24][1]['race_wave']);
         $this->assertSame(2, $response[24][1]['race_weather_id']);
         $this->assertSame(13.0, $response[24][1]['race_temperature']);
@@ -626,7 +626,7 @@ final class ScraperTest extends TestCase
         $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_number']);
         $this->assertSame(7, $response[24][1]['race_wind']);
-        $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
+        $this->assertSame(11, $response[24][1]['race_wind_direction_number']);
         $this->assertSame(6, $response[24][1]['race_wave']);
         $this->assertSame(2, $response[24][1]['race_weather_id']);
         $this->assertSame(13.0, $response[24][1]['race_temperature']);
@@ -691,7 +691,7 @@ final class ScraperTest extends TestCase
         $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_number']);
         $this->assertSame(5, $response[24][1]['race_wind']);
-        $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
+        $this->assertSame(11, $response[24][1]['race_wind_direction_number']);
         $this->assertSame(4, $response[24][1]['race_wave']);
         $this->assertSame(3, $response[24][1]['race_weather_id']);
         $this->assertSame(13.0, $response[24][1]['race_temperature']);
@@ -758,7 +758,7 @@ final class ScraperTest extends TestCase
         $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_number']);
         $this->assertSame(5, $response[24][1]['race_wind']);
-        $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
+        $this->assertSame(11, $response[24][1]['race_wind_direction_number']);
         $this->assertSame(4, $response[24][1]['race_wave']);
         $this->assertSame(3, $response[24][1]['race_weather_id']);
         $this->assertSame(13.0, $response[24][1]['race_temperature']);
@@ -825,7 +825,7 @@ final class ScraperTest extends TestCase
         $this->assertSame(24, $response[24][1]['race_stadium_number']);
         $this->assertSame(1, $response[24][1]['race_number']);
         $this->assertSame(5, $response[24][1]['race_wind']);
-        $this->assertSame(11, $response[24][1]['race_wind_direction_id']);
+        $this->assertSame(11, $response[24][1]['race_wind_direction_number']);
         $this->assertSame(4, $response[24][1]['race_wave']);
         $this->assertSame(3, $response[24][1]['race_weather_id']);
         $this->assertSame(13.0, $response[24][1]['race_temperature']);

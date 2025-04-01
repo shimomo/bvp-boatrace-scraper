@@ -73,7 +73,7 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
         $response['race_stadium_number'] = $raceStadiumNumber;
         $response['race_number'] = $raceNumber;
         $response['race_wind'] = $raceWind;
-        $response['race_wind_direction_id'] = $raceWindDirectionId;
+        $response['race_wind_direction_number'] = $raceWindDirectionId;
         $response['race_wave'] = $raceWave;
         $response['race_weather_id'] = $raceWeatherId;
         $response['race_temperature'] = $raceTemperature;
