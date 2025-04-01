@@ -44,14 +44,14 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
         $raceWindFormat = '%s/div[2]/div[%s]/div[2]/div[2]/div[1]/div[3]/div/span[2]';
         $raceWindDirectionNumberFormat = '%s/div[2]/div[%s]/div[2]/div[2]/div[1]/div[4]/p';
         $raceWaveFormat = '%s/div[2]/div[%s]/div[2]/div[2]/div[1]/div[6]/div/span[2]';
-        $raceWeatherIdFormat = '%s/div[2]/div[%s]/div[2]/div[2]/div[1]/div[2]/div/span';
+        $raceWeatherNumberFormat = '%s/div[2]/div[%s]/div[2]/div[2]/div[1]/div[2]/div/span';
         $raceTemperatureFormat = '%s/div[2]/div[%s]/div[2]/div[2]/div[1]/div[1]/div/span[2]';
         $raceWaterTemperatureFormat = '%s/div[2]/div[%s]/div[2]/div[2]/div[1]/div[5]/div/span[2]';
 
         $raceWindXPath = sprintf($raceWindFormat, $this->baseXPath, $this->baseLevel + 5);
         $raceWindDirectionNumberXPath = sprintf($raceWindDirectionNumberFormat, $this->baseXPath, $this->baseLevel + 5);
         $raceWaveXPath = sprintf($raceWaveFormat, $this->baseXPath, $this->baseLevel + 5);
-        $raceWeatherNameXPath = sprintf($raceWeatherIdFormat, $this->baseXPath, $this->baseLevel + 5);
+        $raceWeatherNameXPath = sprintf($raceWeatherNumberFormat, $this->baseXPath, $this->baseLevel + 5);
         $raceTemperatureXPath = sprintf($raceTemperatureFormat, $this->baseXPath, $this->baseLevel + 5);
         $raceWaterTemperatureXPath = sprintf($raceWaterTemperatureFormat, $this->baseXPath, $this->baseLevel + 5);
 
@@ -65,7 +65,7 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
         $raceWind = Converter::wind($raceWind);
         $raceWindDirectionNumber = Converter::windDirection($raceWindDirectionNumber);
         $raceWave = Converter::wave($raceWave);
-        $raceWeatherId = Converter::weatherId($raceWeatherName);
+        $raceWeatherNumber = Converter::weatherId($raceWeatherName);
         $raceTemperature = Converter::temperature($raceTemperature);
         $raceWaterTemperature = Converter::temperature($raceWaterTemperature);
 
@@ -75,7 +75,7 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
         $response['race_wind'] = $raceWind;
         $response['race_wind_direction_number'] = $raceWindDirectionNumber;
         $response['race_wave'] = $raceWave;
-        $response['race_weather_number'] = $raceWeatherId;
+        $response['race_weather_number'] = $raceWeatherNumber;
         $response['race_temperature'] = $raceTemperature;
         $response['race_water_temperature'] = $raceWaterTemperature;
 
