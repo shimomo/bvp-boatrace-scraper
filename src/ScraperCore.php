@@ -72,7 +72,7 @@ class ScraperCore implements ScraperCoreInterface
         }
 
         $raceStadiumNumbers = $this->getRaceStadiumNumbers($carbonDate, $raceStadiumNumber);
-        $raceNumbers = $this->getRaceCodes($raceNumber);
+        $raceNumbers = $this->getRaceNumbers($raceNumber);
 
         $response = [];
         foreach ($raceStadiumNumbers as $raceStadiumNumber) {
@@ -162,7 +162,7 @@ class ScraperCore implements ScraperCoreInterface
      *
      * @throws \InvalidArgumentException
      */
-    private function getRaceCodes(string|int|null $raceNumber): array
+    private function getRaceNumbers(string|int|null $raceNumber): array
     {
         if (is_null($raceNumber)) {
             return range(1, 12);
