@@ -72,7 +72,7 @@ class ScraperCore implements ScraperCoreInterface
 
         if (str_starts_with($name, 'scrapeStadium')) {
             $methodName = match ($name) {
-                'scrapeStadiumIds' => 'scrapeIds',
+                'scrapeStadiumIds' => 'scrapeNumbers',
                 'scrapeStadiumNames' => 'scrapeNames',
                 default => 'scrape',
             };
@@ -152,7 +152,7 @@ class ScraperCore implements ScraperCoreInterface
     private function getRaceStadiumNumbers(CarbonInterface $raceDate, string|int|null $raceStadiumNumber): array
     {
         if (is_null($raceStadiumNumber)) {
-            return $this->getScraperInstance('scrapeStadiums')->scrapeIds($raceDate);
+            return $this->getScraperInstance('scrapeStadiums')->scrapeNumbers($raceDate);
         }
 
         $formattedRaceStadiumNumber = Converter::convertToString($raceStadiumNumber);
