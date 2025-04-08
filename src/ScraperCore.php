@@ -68,16 +68,15 @@ class ScraperCore implements ScraperCoreInterface
     private function scraper(string $name, CarbonInterface|string $raceDate, string|int|null $raceStadiumNumber = null, string|int|null $raceNumber = null): array
     {
         $scraper = $this->getScraperInstance($name);
+
         $raceDate = Carbon::parse($raceDate);
 
         if (str_starts_with($name, 'scrapeStadium')) {
-            $methodName = match ($name) {
+            return $scraper->{match ($name) {
                 'scrapeStadiumNumbers' => 'scrapeNumbers',
                 'scrapeStadiumNames' => 'scrapeNames',
                 default => 'scrape',
-            };
-            $response = $scraper->$methodName($raceDate);
-            return $response;
+            }}($raceDate);
         }
 
         $raceStadiumNumbers = $this->getRaceStadiumNumbers($raceDate, $raceStadiumNumber);
