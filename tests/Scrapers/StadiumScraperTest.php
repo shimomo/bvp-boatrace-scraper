@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BVP\BoatraceScraper\Tests\Scrapers;
 
 use BVP\BoatraceScraper\Scrapers\StadiumScraper;
-use Carbon\CarbonImmutable as Carbon;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\HttpBrowser;
 
@@ -20,20 +20,6 @@ final class StadiumScraperTest extends TestCase
     protected StadiumScraper $scraper;
 
     /**
-     * @var array
-     */
-    protected array $stadiums = [
-        4 => '平和島',
-        5 => '多摩川',
-        6 => '浜名湖',
-        10 => '三国',
-        15 => '丸亀',
-        18 => '徳山',
-        23 => '唐津',
-        24 => '大村',
-    ];
-
-    /**
      * @return void
      */
     protected function setUp(): void
@@ -44,32 +30,35 @@ final class StadiumScraperTest extends TestCase
     }
 
     /**
+     * @param  array  $arguments
+     * @param  array  $expected
      * @return void
      */
-    public function testScrapeStadiumsWithDate20170331(): void
+    #[DataProviderExternal(StadiumScraperDataProvider::class, 'scrapeStadiumsProvider')]
+    public function testScrapeStadiums(array $arguments, array $expected): void
     {
-        $this->assertSame($this->stadiums, $this->scraper->scrape(
-            Carbon::parse('2017-03-31')
-        ));
+        $this->assertSame($expected, $this->scraper->scrape(...$arguments));
     }
 
     /**
+     * @param  array  $arguments
+     * @param  array  $expected
      * @return void
      */
-    public function testScrapeStadiumIdsWithDate20170331(): void
+    #[DataProviderExternal(StadiumScraperDataProvider::class, 'scrapeStadiumNumbersProvider')]
+    public function testScrapeStadiumNumbers(array $arguments, array $expected): void
     {
-        $this->assertSame(array_keys($this->stadiums), $this->scraper->scrapeIds(
-            Carbon::parse('2017-03-31')
-        ));
+        $this->assertSame($expected, $this->scraper->scrapeIds(...$arguments));
     }
 
     /**
+     * @param  array  $arguments
+     * @param  array  $expected
      * @return void
      */
-    public function testScrapeStadiumNamesWithDate20170331(): void
+    #[DataProviderExternal(StadiumScraperDataProvider::class, 'scrapeStadiumNamesProvider')]
+    public function testScrapeStadiumNames(array $arguments, array $expected): void
     {
-        $this->assertSame(array_values($this->stadiums), $this->scraper->scrapeNames(
-            Carbon::parse('2017-03-31')
-        ));
+        $this->assertSame($expected, $this->scraper->scrapeNames(...$arguments));
     }
 }
