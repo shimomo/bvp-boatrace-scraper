@@ -65,13 +65,13 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $raceWaterTemperature = $this->filterXPath($scraper, $raceWaterTemperatureXPath);
         $raceTechniqueName = $this->filterXPath($scraper, $raceTechniqueNameXPath);
 
-        $raceWind = Converter::wind($raceWind);
-        $raceWindDirectionNumber = Converter::windDirection($raceWindDirectionNumber);
-        $raceWave = Converter::wave($raceWave);
-        $raceWeatherNumber = Converter::weatherId($raceWeatherName);
-        $raceTemperature = Converter::temperature($raceTemperature);
-        $raceWaterTemperature = Converter::temperature($raceWaterTemperature);
-        $raceTechniqueNumber = Converter::techniqueId($raceTechniqueName);
+        $raceWind = Converter::parseWind($raceWind);
+        $raceWindDirectionNumber = Converter::parseWindDirectionNumber($raceWindDirectionNumber);
+        $raceWave = Converter::parseWave($raceWave);
+        $raceWeatherNumber = Converter::convertToWeatherNumber($raceWeatherName);
+        $raceTemperature = Converter::parseTemperature($raceTemperature);
+        $raceWaterTemperature = Converter::parseTemperature($raceWaterTemperature);
+        $raceTechniqueNumber = Converter::convertToTechniqueNumber($raceTechniqueName);
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
@@ -111,8 +111,8 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $racerBoatNumber = $this->filterXPath($scraper, $racerBoatNumberXPath);
             $racerStartTiming = $this->filterXPath($scraper, $racerStartTimingXPath);
 
-            $racerBoatNumber = Converter::int($racerBoatNumber);
-            $racerStartTiming = Converter::startTiming($racerStartTiming);
+            $racerBoatNumber = Converter::convertToInt($racerBoatNumber);
+            $racerStartTiming = Converter::parseStartTiming($racerStartTiming);
 
             $response['courses'][$index]['racer_course_number'] = $index;
             $response['courses'][$index]['racer_boat_number'] = $racerBoatNumber;
@@ -148,10 +148,10 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $racerNumber = $this->filterXPath($scraper, $racerNumberXPath);
             $racerName = $this->filterXPath($scraper, $racerNameXPath);
 
-            $racerPlaceId = Converter::placeId($racerPlaceName) ?? $index;
-            $racerBoatNumber = Converter::int($racerBoatNumber);
-            $racerNumber = Converter::int($racerNumber);
-            $racerName = Converter::name($racerName);
+            $racerPlaceId = Converter::convertToPlaceNumber($racerPlaceName) ?? $index;
+            $racerBoatNumber = Converter::convertToInt($racerBoatNumber);
+            $racerNumber = Converter::convertToInt($racerNumber);
+            $racerName = Converter::convertToName($racerName);
 
             $response['places'][$racerPlaceId]['racer_place_id'] = $racerPlaceId;
             $response['places'][$racerPlaceId]['racer_boat_number'] = $racerBoatNumber;
@@ -199,7 +199,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
                 $refund = str_replace('¥', '', $refund);
                 $refund = str_replace(',', '', $refund);
 
-                $response['refunds'][$value][] = Converter::int($refund);
+                $response['refunds'][$value][] = Converter::convertToInt($refund);
             }
         }
 

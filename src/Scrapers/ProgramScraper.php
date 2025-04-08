@@ -115,8 +115,8 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             $racerAssignedMotorNumberMotorTop23Percent = $this->filterXPath($scraper, $racerAssignedMotorNumberMotorTop23PercentXPath);
             $racerAssignedBoatNumberBoatTop23Percent = $this->filterXPath($scraper, $racerAssignedBoatNumberMotorTop23PercentXPath);
 
-            $racerBoatNumber = Converter::int($racerBoatNumber ?? $index);
-            $racerName = Converter::name($racerName);
+            $racerBoatNumber = Converter::convertToInt($racerBoatNumber ?? $index);
+            $racerName = Converter::convertToName($racerName);
 
             [$racerNumber, $racerClassNumber] = $this->explodeNumberClass($racerNumberClass);
             [$racerBranchNumber, $racerBirthplaceNumber, $racerAge, $racerWeight] = $this->explodeBranchBirthplaceAgeWeight($racerBranchBirthplaceAgeWeight);
@@ -164,11 +164,11 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             return array_fill(0, 2, null);
         }
 
-        $subtitleDistance = Converter::string($subtitleDistance);
+        $subtitleDistance = Converter::convertToString($subtitleDistance);
 
         $values = array_filter(Trimmer::trim(explode(' ', $subtitleDistance)));
-        $distance = Converter::int(array_pop($values));
-        $subtitle = Converter::string(implode($values));
+        $distance = Converter::convertToInt(array_pop($values));
+        $subtitle = Converter::convertToString(implode($values));
 
         return [$subtitle, $distance];
     }
@@ -183,14 +183,14 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             return array_fill(0, 2, null);
         }
 
-        $numberClass = Converter::string($numberClass);
+        $numberClass = Converter::convertToString($numberClass);
 
         [$number, $className] = Trimmer::trim(
             explode('/', $numberClass)
         );
 
-        $number = Converter::int($number);
-        $classId = Converter::classId($className);
+        $number = Converter::convertToInt($number);
+        $classId = Converter::convertToClassNumber($className);
 
         return [$number, $classId];
     }
@@ -205,16 +205,16 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             return array_fill(0, 4, null);
         }
 
-        $branchBirthplaceAgeWeight = Converter::string($branchBirthplaceAgeWeight);
+        $branchBirthplaceAgeWeight = Converter::convertToString($branchBirthplaceAgeWeight);
 
         [$branchNameBirthplaceName, $ageWeight] = Trimmer::trim(explode(' ', $branchBirthplaceAgeWeight));
         [$branchName, $birthplaceName] = Trimmer::trim(explode('/', $branchNameBirthplaceName));
         [$age, $weight] = Trimmer::trim(explode('/', $ageWeight));
 
-        $branchId = Converter::prefectureId($branchName);
-        $birthplaceId = Converter::prefectureId($birthplaceName);
-        $age = Converter::int($age);
-        $weight = Converter::float($weight);
+        $branchId = Converter::convertToPrefectureNumber($branchName);
+        $birthplaceId = Converter::convertToPrefectureNumber($birthplaceName);
+        $age = Converter::convertToInt($age);
+        $weight = Converter::convertToFloat($weight);
 
         return [$branchId, $birthplaceId, $age, $weight];
     }
@@ -229,15 +229,15 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             return array_fill(0, 3, null);
         }
 
-        $flyingLateStartTiming = Converter::string($flyingLateStartTiming);
+        $flyingLateStartTiming = Converter::convertToString($flyingLateStartTiming);
 
         [$flyingCount, $lateCount, $averageStartTiming] = Trimmer::trim(
             explode(' ', $flyingLateStartTiming)
         );
 
-        $flyingCount = Converter::flying($flyingCount);
-        $lateCount = Converter::late($lateCount);
-        $averageStartTiming = Converter::startTiming($averageStartTiming);
+        $flyingCount = Converter::parseFlyingCount($flyingCount);
+        $lateCount = Converter::parseLateCount($lateCount);
+        $averageStartTiming = Converter::parseStartTiming($averageStartTiming);
 
         return [$flyingCount, $lateCount, $averageStartTiming];
     }
@@ -252,15 +252,15 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             return array_fill(0, 3, null);
         }
 
-        $nationalTop123Percent = Converter::string($nationalTop123Percent);
+        $nationalTop123Percent = Converter::convertToString($nationalTop123Percent);
 
         [$nationalTop1Percent, $nationalTop2Percent, $nationalTop3Percent] = Trimmer::trim(
             explode(' ', $nationalTop123Percent)
         );
 
-        $nationalTop1Percent = Converter::float($nationalTop1Percent);
-        $nationalTop2Percent = Converter::float($nationalTop2Percent);
-        $nationalTop3Percent = Converter::float($nationalTop3Percent);
+        $nationalTop1Percent = Converter::convertToFloat($nationalTop1Percent);
+        $nationalTop2Percent = Converter::convertToFloat($nationalTop2Percent);
+        $nationalTop3Percent = Converter::convertToFloat($nationalTop3Percent);
 
         return [$nationalTop1Percent, $nationalTop2Percent, $nationalTop3Percent];
     }
@@ -275,15 +275,15 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             return array_fill(0, 3, null);
         }
 
-        $localTop123Percent = Converter::string($localTop123Percent);
+        $localTop123Percent = Converter::convertToString($localTop123Percent);
 
         [$localTop1Percent, $localTop2Percent, $localTop3Percent] = Trimmer::trim(
             explode(' ', $localTop123Percent)
         );
 
-        $localTop1Percent = Converter::float($localTop1Percent);
-        $localTop2Percent = Converter::float($localTop2Percent);
-        $localTop3Percent = Converter::float($localTop3Percent);
+        $localTop1Percent = Converter::convertToFloat($localTop1Percent);
+        $localTop2Percent = Converter::convertToFloat($localTop2Percent);
+        $localTop3Percent = Converter::convertToFloat($localTop3Percent);
 
         return [$localTop1Percent, $localTop2Percent, $localTop3Percent];
     }
@@ -298,15 +298,15 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             return array_fill(0, 3, null);
         }
 
-        $assignedMotorNumberMotorTop23Percent = Converter::string($assignedMotorNumberMotorTop23Percent);
+        $assignedMotorNumberMotorTop23Percent = Converter::convertToString($assignedMotorNumberMotorTop23Percent);
 
         [$assignedMotorNumber, $assignedMotorTop2Percent, $assignedMotorTop3Percent] = Trimmer::trim(
             explode(' ', $assignedMotorNumberMotorTop23Percent)
         );
 
-        $assignedMotorNumber = Converter::int($assignedMotorNumber);
-        $assignedMotorTop2Percent = Converter::float($assignedMotorTop2Percent);
-        $assignedMotorTop3Percent = Converter::float($assignedMotorTop3Percent);
+        $assignedMotorNumber = Converter::convertToInt($assignedMotorNumber);
+        $assignedMotorTop2Percent = Converter::convertToFloat($assignedMotorTop2Percent);
+        $assignedMotorTop3Percent = Converter::convertToFloat($assignedMotorTop3Percent);
 
         return [$assignedMotorNumber, $assignedMotorTop2Percent, $assignedMotorTop3Percent];
     }
@@ -321,15 +321,15 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
             return array_fill(0, 3, null);
         }
 
-        $assignedBoatNumberBoatTop23Percent = Converter::string($assignedBoatNumberBoatTop23Percent);
+        $assignedBoatNumberBoatTop23Percent = Converter::convertToString($assignedBoatNumberBoatTop23Percent);
 
         [$assignedBoatNumber, $assignedBoatTop2Percent, $assignedBoatTop3Percent] = Trimmer::trim(
             explode(' ', $assignedBoatNumberBoatTop23Percent)
         );
 
-        $assignedBoatNumber = Converter::int($assignedBoatNumber);
-        $assignedBoatTop2Percent = Converter::float($assignedBoatTop2Percent);
-        $assignedBoatTop3Percent = Converter::float($assignedBoatTop3Percent);
+        $assignedBoatNumber = Converter::convertToInt($assignedBoatNumber);
+        $assignedBoatTop2Percent = Converter::convertToFloat($assignedBoatTop2Percent);
+        $assignedBoatTop3Percent = Converter::convertToFloat($assignedBoatTop3Percent);
 
         return [$assignedBoatNumber, $assignedBoatTop2Percent, $assignedBoatTop3Percent];
     }

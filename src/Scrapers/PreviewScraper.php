@@ -62,12 +62,12 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
         $raceTemperature = $this->filterXPath($scraper, $raceTemperatureXPath);
         $raceWaterTemperature = $this->filterXPath($scraper, $raceWaterTemperatureXPath);
 
-        $raceWind = Converter::wind($raceWind);
-        $raceWindDirectionNumber = Converter::windDirection($raceWindDirectionNumber);
-        $raceWave = Converter::wave($raceWave);
-        $raceWeatherNumber = Converter::weatherId($raceWeatherName);
-        $raceTemperature = Converter::temperature($raceTemperature);
-        $raceWaterTemperature = Converter::temperature($raceWaterTemperature);
+        $raceWind = Converter::parseWind($raceWind);
+        $raceWindDirectionNumber = Converter::parseWindDirectionNumber($raceWindDirectionNumber);
+        $raceWave = Converter::parseWave($raceWave);
+        $raceWeatherNumber = Converter::convertToWeatherNumber($raceWeatherName);
+        $raceTemperature = Converter::parseTemperature($raceTemperature);
+        $raceWaterTemperature = Converter::parseTemperature($raceWaterTemperature);
 
         $response['race_date'] = $carbonDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
@@ -114,11 +114,11 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
             $racerExhibitionTime = $this->filterXPath($scraper, $racerExhibitionTimeXPath);
             $racerTiltAdjustment = $this->filterXPath($scraper, $racerTiltAdjustmentXPath);
 
-            $racerBoatNumber = Converter::int($racerBoatNumber ?? $index);
-            $racerWeight = Converter::float($racerWeight);
-            $racerWeightAdjustment = Converter::float($racerWeightAdjustment);
-            $racerExhibitionTime = Converter::float($racerExhibitionTime);
-            $racerTiltAdjustment = Converter::float($racerTiltAdjustment);
+            $racerBoatNumber = Converter::convertToInt($racerBoatNumber ?? $index);
+            $racerWeight = Converter::convertToFloat($racerWeight);
+            $racerWeightAdjustment = Converter::convertToFloat($racerWeightAdjustment);
+            $racerExhibitionTime = Converter::convertToFloat($racerExhibitionTime);
+            $racerTiltAdjustment = Converter::convertToFloat($racerTiltAdjustment);
 
             $response['boats'][$racerBoatNumber]['racer_boat_number'] = $racerBoatNumber;
             $response['boats'][$racerBoatNumber]['racer_weight'] = $racerWeight;
@@ -150,8 +150,8 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
             $racerBoatNumber = $this->filterXPath($scraper, $racerBoatNumberXPath);
             $racerStartTiming = $this->filterXPath($scraper, $racerStartTimingXPath);
 
-            $racerBoatNumber = Converter::int($racerBoatNumber);
-            $racerStartTiming = Converter::startTiming($racerStartTiming);
+            $racerBoatNumber = Converter::convertToInt($racerBoatNumber);
+            $racerStartTiming = Converter::parseStartTiming($racerStartTiming);
 
             $response['courses'][$index]['racer_course_number'] = $index;
             $response['courses'][$index]['racer_boat_number'] = $racerBoatNumber;

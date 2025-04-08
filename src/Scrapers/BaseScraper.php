@@ -53,7 +53,7 @@ abstract class BaseScraper
         }
 
         $value = $scraper->filterXPath($xpath)->text();
-        $value = Converter::string($value);
+        $value = Converter::convertToString($value);
         $value = Trimmer::trim($value);
         return $value;
     }
@@ -70,7 +70,7 @@ abstract class BaseScraper
         }
 
         $value = $scraper->filterXPath($xpath)->attr('class');
-        $value = Converter::string($value);
+        $value = Converter::convertToString($value);
         $value = Trimmer::trim($value);
         return $value;
     }
@@ -87,7 +87,7 @@ abstract class BaseScraper
         }
 
         $value = $scraper->filterXPath($xpath)->text();
-        $value = Converter::float($value);
+        $value = Converter::convertToFloat($value);
         return $value;
     }
 
@@ -100,8 +100,8 @@ abstract class BaseScraper
     {
         if ($scraper->filterXPath($xpath)->count()) {
             if (count($oddses = explode('-', $scraper->filterXPath($xpath)->text())) === 2) {
-                $lowerLimit = Converter::float(array_shift($oddses));
-                $upperLimit = Converter::float(array_shift($oddses));
+                $lowerLimit = Converter::convertToFloat(array_shift($oddses));
+                $upperLimit = Converter::convertToFloat(array_shift($oddses));
             }
         }
 

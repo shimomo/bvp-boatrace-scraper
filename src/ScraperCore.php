@@ -146,7 +146,7 @@ class ScraperCore implements ScraperCoreInterface
             return $this->getScraperInstance('scrapeStadiums')->scrapeIds($carbonDate);
         }
 
-        $formattedRaceStadiumCode = Converter::string($raceStadiumNumber);
+        $formattedRaceStadiumCode = Converter::convertToString($raceStadiumNumber);
         if (preg_match('/\b(0?[1-9]|1[0-9]|2[0-4])\b/', $formattedRaceStadiumCode, $matches)) {
             return [(int) $matches[1]];
         }
@@ -168,7 +168,7 @@ class ScraperCore implements ScraperCoreInterface
             return range(1, 12);
         }
 
-        $formattedRaceCode = Converter::string($raceNumber);
+        $formattedRaceCode = Converter::convertToString($raceNumber);
         if (preg_match('/\b(0?[1-9]|1[0-2])\b/', $formattedRaceCode, $matches)) {
             return [(int) $matches[1]];
         }
