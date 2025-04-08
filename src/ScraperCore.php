@@ -109,7 +109,7 @@ class ScraperCore implements ScraperCoreInterface
         }
 
         throw new \InvalidArgumentException(
-            __METHOD__ . "The scraper name for '{$name}' is invalid."
+            __METHOD__ . "() - The scraper name for '{$name}' is invalid."
         );
     }
 
@@ -160,7 +160,7 @@ class ScraperCore implements ScraperCoreInterface
         }
 
         throw new \InvalidArgumentException(
-            __METHOD__ . "The race stadium code for '{$raceStadiumNumber}' is invalid."
+            __METHOD__ . "() - The race stadium number for '{$raceStadiumNumber}' is invalid."
         );
     }
 
@@ -182,7 +182,7 @@ class ScraperCore implements ScraperCoreInterface
         }
 
         throw new \InvalidArgumentException(
-            __METHOD__ . "() - The race code for '{$raceNumber}' is invalid."
+            __METHOD__ . "() - The race number for '{$raceNumber}' is invalid."
         );
     }
 }
