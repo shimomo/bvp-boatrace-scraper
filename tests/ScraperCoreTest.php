@@ -106,7 +106,7 @@ final class ScraperCoreTest extends TestCase
     /**
      * @return void
      */
-    public function testInvalidTooManyArguments(): void
+    public function testExceptionOnTooFewArguments(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
