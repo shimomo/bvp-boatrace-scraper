@@ -13,15 +13,15 @@ use Carbon\CarbonInterface;
 class StadiumScraper extends BaseScraper implements StadiumScraperInterface
 {
     /**
-     * @param  \Carbon\CarbonInterface  $carbonDate
+     * @param  \Carbon\CarbonInterface  $raceDate
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate): array
+    public function scrape(CarbonInterface $raceDate): array
     {
         $response = [];
 
         $scraperFormat = '%s/owpc/pc/race/index?hd=%s';
-        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'));
+        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $raceDate->format('Ymd'));
         $scraper = $this->httpBrowser->request('GET', $scraperUrl);
 
         $response = [];
@@ -37,20 +37,20 @@ class StadiumScraper extends BaseScraper implements StadiumScraperInterface
     }
 
     /**
-     * @param  \Carbon\CarbonInterface  $carbonDate
+     * @param  \Carbon\CarbonInterface  $raceDate
      * @return array
      */
-    public function scrapeIds(CarbonInterface $carbonDate): array
+    public function scrapeIds(CarbonInterface $raceDate): array
     {
-        return array_keys($this->scrape($carbonDate));
+        return array_keys($this->scrape($raceDate));
     }
 
     /**
-     * @param  \Carbon\CarbonInterface  $carbonDate
+     * @param  \Carbon\CarbonInterface  $raceDate
      * @return array
      */
-    public function scrapeNames(CarbonInterface $carbonDate): array
+    public function scrapeNames(CarbonInterface $raceDate): array
     {
-        return array_values($this->scrape($carbonDate));
+        return array_values($this->scrape($raceDate));
     }
 }

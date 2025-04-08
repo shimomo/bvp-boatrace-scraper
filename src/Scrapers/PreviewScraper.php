@@ -19,17 +19,17 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
     private string $baseXPath = 'descendant-or-self::body/main/div/div/div';
 
     /**
-     * @param  \Carbon\CarbonInterface  $carbonDate
+     * @param  \Carbon\CarbonInterface  $raceDate
      * @param  int                      $raceStadiumNumber
      * @param  int                      $raceNumber
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceNumber): array
+    public function scrape(CarbonInterface $raceDate, int $raceStadiumNumber, int $raceNumber): array
     {
         $response = [];
 
         $scraperFormat = '%s/owpc/pc/race/beforeinfo?hd=%s&jcd=%02d&rno=%d';
-        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
+        $scraperUrl = sprintf($scraperFormat, $this->baseUrl, $raceDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
         $scraper = $this->httpBrowser->request('GET', $scraperUrl);
         sleep($this->seconds);
 
@@ -69,7 +69,7 @@ class PreviewScraper extends BaseScraper implements PreviewScraperInterface
         $raceTemperature = Converter::parseTemperature($raceTemperature);
         $raceWaterTemperature = Converter::parseTemperature($raceWaterTemperature);
 
-        $response['race_date'] = $carbonDate->format('Y-m-d');
+        $response['race_date'] = $raceDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
         $response['race_number'] = $raceNumber;
         $response['race_wind'] = $raceWind;

@@ -18,37 +18,37 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
     private string $baseXPath = 'descendant-or-self::body/main/div/div/div';
 
     /**
-     * @param  \Carbon\CarbonInterface  $carbonDate
+     * @param  \Carbon\CarbonInterface  $raceDate
      * @param  int                      $raceStadiumNumber
      * @param  int                      $raceNumber
      * @return array
      */
-    public function scrape(CarbonInterface $carbonDate, int $raceStadiumNumber, int $raceNumber): array
+    public function scrape(CarbonInterface $raceDate, int $raceStadiumNumber, int $raceNumber): array
     {
         $response = [];
 
         $scraper1Format = '%s/owpc/pc/race/oddstf?hd=%s&jcd=%02d&rno=%d';
-        $scraper1Url = sprintf($scraper1Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
+        $scraper1Url = sprintf($scraper1Format, $this->baseUrl, $raceDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
         $scraper1 = $this->httpBrowser->request('GET', $scraper1Url);
         sleep($this->seconds);
 
         $scraper2Format = '%s/owpc/pc/race/odds2tf?hd=%s&jcd=%02d&rno=%d';
-        $scraper2Url = sprintf($scraper2Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
+        $scraper2Url = sprintf($scraper2Format, $this->baseUrl, $raceDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
         $scraper2 = $this->httpBrowser->request('GET', $scraper2Url);
         sleep($this->seconds);
 
         $scraper3Format = '%s/owpc/pc/race/oddsk?hd=%s&jcd=%02d&rno=%d';
-        $scraper3Url = sprintf($scraper3Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
+        $scraper3Url = sprintf($scraper3Format, $this->baseUrl, $raceDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
         $scraper3 = $this->httpBrowser->request('GET', $scraper3Url);
         sleep($this->seconds);
 
         $scraper4Format = '%s/owpc/pc/race/odds3t?hd=%s&jcd=%02d&rno=%d';
-        $scraper4Url = sprintf($scraper4Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
+        $scraper4Url = sprintf($scraper4Format, $this->baseUrl, $raceDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
         $scraper4 = $this->httpBrowser->request('GET', $scraper4Url);
         sleep($this->seconds);
 
         $scraper5Format = '%s/owpc/pc/race/odds3f?hd=%s&jcd=%02d&rno=%d';
-        $scraper5Url = sprintf($scraper5Format, $this->baseUrl, $carbonDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
+        $scraper5Url = sprintf($scraper5Format, $this->baseUrl, $raceDate->format('Ymd'), $raceStadiumNumber, $raceNumber);
         $scraper5 = $this->httpBrowser->request('GET', $scraper5Url);
         sleep($this->seconds);
 
@@ -60,7 +60,7 @@ class OddsScraper extends BaseScraper implements OddsScraperInterface
             $this->baseLevel = 1;
         }
 
-        $response['race_date'] = $carbonDate->format('Y-m-d');
+        $response['race_date'] = $raceDate->format('Y-m-d');
         $response['race_stadium_number'] = $raceStadiumNumber;
         $response['race_number'] = $raceNumber;
 

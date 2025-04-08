@@ -68,7 +68,7 @@ class ScraperCore implements ScraperCoreInterface
     private function scraper(string $name, CarbonInterface|string $date, string|int|null $raceStadiumNumber = null, string|int|null $raceNumber = null): array
     {
         $scraper = $this->getScraperInstance($name);
-        $carbonDate = Carbon::parse($date);
+        $raceDate = Carbon::parse($date);
 
         if (str_starts_with($name, 'scrapeStadium')) {
             $methodName = match ($name) {
@@ -76,18 +76,18 @@ class ScraperCore implements ScraperCoreInterface
                 'scrapeStadiumNames' => 'scrapeNames',
                 default => 'scrape',
             };
-            $response = $scraper->$methodName($carbonDate);
+            $response = $scraper->$methodName($raceDate);
             return $response;
         }
 
-        $raceStadiumNumbers = $this->getRaceStadiumNumbers($carbonDate, $raceStadiumNumber);
+        $raceStadiumNumbers = $this->getRaceStadiumNumbers($raceDate, $raceStadiumNumber);
         $raceNumbers = $this->getRaceNumbers($raceNumber);
 
         $response = [];
         foreach ($raceStadiumNumbers as $raceStadiumNumber) {
             foreach ($raceNumbers as $raceNumber) {
                 $response[$raceStadiumNumber][$raceNumber] = $scraper->scrape(
-                    $carbonDate,
+                    $raceDate,
                     $raceStadiumNumber,
                     $raceNumber
                 );
@@ -143,16 +143,16 @@ class ScraperCore implements ScraperCoreInterface
     }
 
     /**
-     * @param  \Carbon\CarbonInterface  $carbonDate
+     * @param  \Carbon\CarbonInterface  $raceDate
      * @param  string|int|null          $raceStadiumNumber
      * @return array
      *
      * @throws \InvalidArgumentException
      */
-    private function getRaceStadiumNumbers(CarbonInterface $carbonDate, string|int|null $raceStadiumNumber): array
+    private function getRaceStadiumNumbers(CarbonInterface $raceDate, string|int|null $raceStadiumNumber): array
     {
         if (is_null($raceStadiumNumber)) {
-            return $this->getScraperInstance('scrapeStadiums')->scrapeIds($carbonDate);
+            return $this->getScraperInstance('scrapeStadiums')->scrapeIds($raceDate);
         }
 
         $formattedRaceStadiumNumber = Converter::convertToString($raceStadiumNumber);
