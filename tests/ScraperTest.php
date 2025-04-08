@@ -77,7 +77,7 @@ final class ScraperTest extends TestCase
     #[DataProviderExternal(ScraperCoreDataProvider::class, 'scrapeStadiumNumbersProvider')]
     public function testScrapeStadiumNumbers(array $arguments, array $expected): void
     {
-        $this->assertSame($expected, Scraper::scrapeStadiumIds(...$arguments));
+        $this->assertSame($expected, Scraper::scrapeStadiumNumbers(...$arguments));
     }
 
     /**

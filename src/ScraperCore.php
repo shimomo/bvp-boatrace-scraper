@@ -33,7 +33,7 @@ class ScraperCore implements ScraperCoreInterface
         'scrapePreviews' => PreviewScraper::class,
         'scrapePrograms' => ProgramScraper::class,
         'scrapeResults' => ResultScraper::class,
-        'scrapeStadiumIds' => StadiumScraper::class,
+        'scrapeStadiumNumbers' => StadiumScraper::class,
         'scrapeStadiumNames' => StadiumScraper::class,
         'scrapeStadiums' => StadiumScraper::class,
     ];
@@ -72,7 +72,7 @@ class ScraperCore implements ScraperCoreInterface
 
         if (str_starts_with($name, 'scrapeStadium')) {
             $methodName = match ($name) {
-                'scrapeStadiumIds' => 'scrapeNumbers',
+                'scrapeStadiumNumbers' => 'scrapeNumbers',
                 'scrapeStadiumNames' => 'scrapeNames',
                 default => 'scrape',
             };
