@@ -13,7 +13,6 @@ use BVP\BoatraceScraper\Scrapers\ResultScraper;
 use BVP\BoatraceScraper\Scrapers\StadiumScraper;
 use Carbon\CarbonImmutable as Carbon;
 use Carbon\CarbonInterface;
-use InvalidArgumentException;
 use Symfony\Component\BrowserKit\HttpBrowser;
 
 /**
@@ -100,7 +99,7 @@ class ScraperCore implements ScraperCoreInterface
             return $this->scraperClasses[$name];
         }
 
-        throw new InvalidArgumentException(
+        throw new \InvalidArgumentException(
             __METHOD__ . "The scraper name for '{$name}' is invalid."
         );
     }
@@ -151,7 +150,7 @@ class ScraperCore implements ScraperCoreInterface
             return [(int) $matches[1]];
         }
 
-        throw new InvalidArgumentException(
+        throw new \InvalidArgumentException(
             __METHOD__ . "The race stadium code for '{$raceStadiumNumber}' is invalid."
         );
     }
@@ -173,7 +172,7 @@ class ScraperCore implements ScraperCoreInterface
             return [(int) $matches[1]];
         }
 
-        throw new InvalidArgumentException(
+        throw new \InvalidArgumentException(
             __METHOD__ . "() - The race code for '{$raceNumber}' is invalid."
         );
     }
