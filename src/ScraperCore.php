@@ -100,7 +100,7 @@ class ScraperCore implements ScraperCoreInterface
      * @param  string  $name
      * @return string
      *
-     * @throws \InvalidArgumentException
+     * @throws \BadMethodCallException
      */
     private function resolveScraperClass(string $name): string
     {
@@ -108,7 +108,7 @@ class ScraperCore implements ScraperCoreInterface
             return $this->scraperClasses[$name];
         }
 
-        throw new \InvalidArgumentException(
+        throw new \BadMethodCallException(
             __METHOD__ . "() - The scraper name for '{$name}' is invalid."
         );
     }
