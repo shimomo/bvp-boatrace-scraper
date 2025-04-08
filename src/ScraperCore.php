@@ -71,7 +71,7 @@ class ScraperCore implements ScraperCoreInterface
             return $response;
         }
 
-        $raceStadiumNumbers = $this->getRaceStadiumCodes($carbonDate, $raceStadiumNumber);
+        $raceStadiumNumbers = $this->getRaceStadiumNumbers($carbonDate, $raceStadiumNumber);
         $raceNumbers = $this->getRaceCodes($raceNumber);
 
         $response = [];
@@ -140,7 +140,7 @@ class ScraperCore implements ScraperCoreInterface
      *
      * @throws \InvalidArgumentException
      */
-    private function getRaceStadiumCodes(CarbonInterface $carbonDate, string|int|null $raceStadiumNumber): array
+    private function getRaceStadiumNumbers(CarbonInterface $carbonDate, string|int|null $raceStadiumNumber): array
     {
         if (is_null($raceStadiumNumber)) {
             return $this->getScraperInstance('scrapeStadiums')->scrapeIds($carbonDate);
