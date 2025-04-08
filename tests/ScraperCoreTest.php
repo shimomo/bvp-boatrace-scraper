@@ -102,4 +102,19 @@ final class ScraperCoreTest extends TestCase
     {
         $this->assertSame($expected, $this->scraper->scrapeStadiumNames(...$arguments));
     }
+
+    /**
+     * @return void
+     */
+    public function testInvalidTooManyArguments(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            "BVP\BoatraceScraper\ScraperCore::__call() - " .
+            "Too many arguments to function BVP\BoatraceScraper\ScraperCore::invalid(), " .
+            "4 passed and exactly 1-3 expected."
+        );
+
+        $this->scraper->invalid(1, 2, 3, 4);
+    }
 }
