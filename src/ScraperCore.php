@@ -176,8 +176,8 @@ class ScraperCore implements ScraperCoreInterface
             return range(1, 12);
         }
 
-        $formattedRaceCode = Converter::convertToString($raceNumber);
-        if (preg_match('/\b(0?[1-9]|1[0-2])\b/', $formattedRaceCode, $matches)) {
+        $formattedRaceNumber = Converter::convertToString($raceNumber);
+        if (preg_match('/\b(0?[1-9]|1[0-2])\b/', $formattedRaceNumber, $matches)) {
             return [(int) $matches[1]];
         }
 
