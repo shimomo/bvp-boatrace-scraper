@@ -63,7 +63,7 @@ abstract class BaseScraper
      * @param  string                                 $xpath
      * @return string
      */
-    protected function filterXPathForWindDirectionId(Crawler $scraper, string $xpath): ?string
+    protected function filterXPathForWindDirectionNumber(Crawler $scraper, string $xpath): ?string
     {
         if (!$scraper->filterXPath($xpath)->count()) {
             return null;
