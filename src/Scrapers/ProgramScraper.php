@@ -190,9 +190,9 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
         );
 
         $number = Converter::convertToInt($number);
-        $classId = Converter::convertToClassNumber($className);
+        $classNumber = Converter::convertToClassNumber($className);
 
-        return [$number, $classId];
+        return [$number, $classNumber];
     }
 
     /**
