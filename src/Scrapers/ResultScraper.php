@@ -148,15 +148,15 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $racerNumber = $this->filterXPath($scraper, $racerNumberXPath);
             $racerName = $this->filterXPath($scraper, $racerNameXPath);
 
-            $racerPlaceId = Converter::convertToPlaceNumber($racerPlaceName) ?? $index;
+            $racerPlaceNumber = Converter::convertToPlaceNumber($racerPlaceName) ?? $index;
             $racerBoatNumber = Converter::convertToInt($racerBoatNumber);
             $racerNumber = Converter::convertToInt($racerNumber);
             $racerName = Converter::convertToName($racerName);
 
-            $response['places'][$racerPlaceId]['racer_place_id'] = $racerPlaceId;
-            $response['places'][$racerPlaceId]['racer_boat_number'] = $racerBoatNumber;
-            $response['places'][$racerPlaceId]['racer_number'] = $racerNumber;
-            $response['places'][$racerPlaceId]['racer_name'] = $racerName;
+            $response['places'][$racerPlaceNumber]['racer_place_id'] = $racerPlaceNumber;
+            $response['places'][$racerPlaceNumber]['racer_boat_number'] = $racerBoatNumber;
+            $response['places'][$racerPlaceNumber]['racer_number'] = $racerNumber;
+            $response['places'][$racerPlaceNumber]['racer_name'] = $racerName;
         }
 
         return $response;
