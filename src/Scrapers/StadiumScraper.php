@@ -29,8 +29,8 @@ class StadiumScraper extends BaseScraper implements StadiumScraperInterface
         $scraper = $scraper->filter('table tbody td.is-arrow1.is-fBold.is-fs15');
         $scraper->each(function ($element) use (&$response) {
             $stadiumName = str_replace('>', '', $element->filter('a')->filter('img')->attr('alt'));
-            $stadiumId = Converter::convertToStadiumNumber($stadiumName);
-            $response[$stadiumId] = $stadiumName;
+            $stadiumNumber = Converter::convertToStadiumNumber($stadiumName);
+            $response[$stadiumNumber] = $stadiumName;
         });
 
         return $response;
