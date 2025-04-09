@@ -212,11 +212,11 @@ class ProgramScraper extends BaseScraper implements ProgramScraperInterface
         [$age, $weight] = Trimmer::trim(explode('/', $ageWeight));
 
         $branchNumber = Converter::convertToPrefectureNumber($branchName);
-        $birthplaceId = Converter::convertToPrefectureNumber($birthplaceName);
+        $birthplaceNumber = Converter::convertToPrefectureNumber($birthplaceName);
         $age = Converter::convertToInt($age);
         $weight = Converter::convertToFloat($weight);
 
-        return [$branchNumber, $birthplaceId, $age, $weight];
+        return [$branchNumber, $birthplaceNumber, $age, $weight];
     }
 
     /**
