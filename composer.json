@@ -1,13 +1,17 @@
 {
     "name": "bvp/boatrace-scraper",
     "description": "The BVP Boatrace Scraper package for Boatrace.",
-    "keywords": ["library", "boatrace", "scraper"],
+    "keywords": [
+        "boatrace",
+        "library",
+        "scraper"
+    ],
     "license": "MIT",
     "type": "library",
     "authors": [
         {
             "name": "shimomo",
-            "email": "developer@shimomo.net"
+            "email": "bvp@shimomo.net"
         }
     ],
     "require": {
@@ -31,5 +35,7 @@
         "psr-4": {
             "BVP\\BoatraceScraper\\Tests\\": "tests/"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
