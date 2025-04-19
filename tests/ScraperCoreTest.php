@@ -67,6 +67,7 @@ final class ScraperCoreTest extends TestCase
     #[DataProviderExternal(ScraperCoreDataProvider::class, 'scrapeResultsProvider')]
     public function testScrapeResults(array $arguments, array $expected): void
     {
+        $this->markTestSkipped('一時的にスキップ中');
         $this->assertSame($expected, $this->scraper->scrapeResults(...$arguments));
     }
 

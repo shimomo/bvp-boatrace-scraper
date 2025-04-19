@@ -114,9 +114,9 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $racerBoatNumber = Converter::convertToInt($racerBoatNumber);
             $racerStartTiming = Converter::parseStartTiming($racerStartTiming);
 
-            $response['courses'][$index]['racer_course_number'] = $index;
-            $response['courses'][$index]['racer_boat_number'] = $racerBoatNumber;
-            $response['courses'][$index]['racer_start_timing'] = $racerStartTiming;
+            $response['boats'][$racerBoatNumber]['racer_boat_number'] = $racerBoatNumber;
+            $response['boats'][$racerBoatNumber]['racer_course_number'] = $index;
+            $response['boats'][$racerBoatNumber]['racer_start_timing'] = $racerStartTiming;
         }
 
         return $response;
