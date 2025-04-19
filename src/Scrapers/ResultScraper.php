@@ -137,18 +137,18 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $racerNumberFormat = '%s/div[2]/div[%s]/div[1]/div/table/tbody[%s]/tr/td[3]/span[1]';
         $racerNameFormat = '%s/div[2]/div[%s]/div[1]/div/table/tbody[%s]/tr/td[3]/span[2]';
 
-        foreach (range(1, 6) as $index) {
-            $racerPlaceNameXPath = sprintf($racerPlaceNameFormat, $this->baseXPath, $this->baseLevel + 5, $index);
-            $racerBoatNumberXPath = sprintf($racerBoatNumberFormat, $this->baseXPath, $this->baseLevel + 5, $index);
-            $racerNumberXPath = sprintf($racerNumberFormat, $this->baseXPath, $this->baseLevel + 5, $index);
-            $racerNameXPath = sprintf($racerNameFormat, $this->baseXPath, $this->baseLevel + 5, $index);
+        foreach (range(1, 6) as $placeNumber) {
+            $racerPlaceNameXPath = sprintf($racerPlaceNameFormat, $this->baseXPath, $this->baseLevel + 5, $placeNumber);
+            $racerBoatNumberXPath = sprintf($racerBoatNumberFormat, $this->baseXPath, $this->baseLevel + 5, $placeNumber);
+            $racerNumberXPath = sprintf($racerNumberFormat, $this->baseXPath, $this->baseLevel + 5, $placeNumber);
+            $racerNameXPath = sprintf($racerNameFormat, $this->baseXPath, $this->baseLevel + 5, $placeNumber);
 
             $racerPlaceName = $this->filterXPath($scraper, $racerPlaceNameXPath);
             $racerBoatNumber = $this->filterXPath($scraper, $racerBoatNumberXPath);
             $racerNumber = $this->filterXPath($scraper, $racerNumberXPath);
             $racerName = $this->filterXPath($scraper, $racerNameXPath);
 
-            $racerPlaceNumber = Converter::convertToPlaceNumber($racerPlaceName) ?? $index;
+            $racerPlaceNumber = Converter::convertToPlaceNumber($racerPlaceName) ?? $placeNumber;
             $racerBoatNumber = Converter::convertToInt($racerBoatNumber);
             $racerNumber = Converter::convertToInt($racerNumber);
             $racerName = Converter::convertToName($racerName);
