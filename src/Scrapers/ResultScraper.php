@@ -94,11 +94,12 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $racerBoatNumber = $this->filterXPath($scraper, $racerBoatNumberXPath);
             $racerStartTiming = $this->filterXPath($scraper, $racerStartTimingXPath);
 
-            $racerBoatNumber = Converter::convertToInt($racerBoatNumber);
+            $racerCourseNumber = is_null($racerBoatNumber) ? null : $courseNumber;
+            $racerBoatNumber = Converter::convertToInt($racerBoatNumber) ?? $courseNumber;
             $racerStartTiming = Converter::parseStartTiming($racerStartTiming);
 
             $response['boats'][$racerBoatNumber]['racer_boat_number'] = $racerBoatNumber;
-            $response['boats'][$racerBoatNumber]['racer_course_number'] = $courseNumber;
+            $response['boats'][$racerBoatNumber]['racer_course_number'] = $racerCourseNumber;
             $response['boats'][$racerBoatNumber]['racer_start_timing'] = $racerStartTiming;
         }
 
@@ -118,8 +119,8 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $racerNumber = $this->filterXPath($scraper, $racerNumberXPath);
             $racerName = $this->filterXPath($scraper, $racerNameXPath);
 
-            $racerPlaceNumber = Converter::convertToPlaceNumber($racerPlaceName) ?? $placeNumber;
-            $racerBoatNumber = Converter::convertToInt($racerBoatNumber);
+            $racerPlaceNumber = Converter::convertToPlaceNumber($racerPlaceName);
+            $racerBoatNumber = Converter::convertToInt($racerBoatNumber) ?? $placeNumber;
             $racerNumber = Converter::convertToInt($racerNumber);
             $racerName = Converter::convertToName($racerName);
 
