@@ -84,23 +84,6 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $response['race_water_temperature'] = $raceWaterTemperature;
         $response['race_technique_number'] = $raceTechniqueNumber;
 
-        $response += $this->scrapeCourses($scraper, $raceStadiumNumber, $raceNumber);
-        $response += $this->scrapePlaces($scraper, $raceStadiumNumber, $raceNumber);
-        $response += $this->scrapeRefunds($scraper, $raceStadiumNumber, $raceNumber);
-
-        return $response;
-    }
-
-    /**
-     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
-     * @param  int                                    $raceStadiumNumber
-     * @param  int                                    $raceNumber
-     * @return array
-     */
-    private function scrapeCourses(Crawler $scraper, int $raceStadiumNumber, int $raceNumber): array
-    {
-        $response = [];
-
         $racerBoatNumberFormat = '%s/div[2]/div[%s]/div[2]/div/table/tbody/tr[%s]/td/div/span[1]';
         $racerStartTimingFormat = '%s/div[2]/div[%s]/div[2]/div/table/tbody/tr[%s]/td/div/span[3]/span';
 
@@ -118,6 +101,9 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $response['boats'][$racerBoatNumber]['racer_course_number'] = $courseNumber;
             $response['boats'][$racerBoatNumber]['racer_start_timing'] = $racerStartTiming;
         }
+
+        $response += $this->scrapePlaces($scraper, $raceStadiumNumber, $raceNumber);
+        $response += $this->scrapeRefunds($scraper, $raceStadiumNumber, $raceNumber);
 
         return $response;
     }
