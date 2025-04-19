@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+      - '*.x'
+  pull_request:
+    branches:
+      - main
+      - '*.x'
   schedule:
     - cron: '0 0 * * *'
 
@@ -34,5 +39,4 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: shimomo/bvp-boatrace-scraper
         files: build/coverage-xml/coverage.xml
