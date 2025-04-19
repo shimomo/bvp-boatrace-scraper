@@ -104,9 +104,9 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $racerBoatNumberFormat = '%s/div[2]/div[%s]/div[2]/div/table/tbody/tr[%s]/td/div/span[1]';
         $racerStartTimingFormat = '%s/div[2]/div[%s]/div[2]/div/table/tbody/tr[%s]/td/div/span[3]/span';
 
-        foreach (range(1, 6) as $index) {
-            $racerBoatNumberXPath = sprintf($racerBoatNumberFormat, $this->baseXPath, $this->baseLevel + 5, $index);
-            $racerStartTimingXPath = sprintf($racerStartTimingFormat, $this->baseXPath, $this->baseLevel + 5, $index);
+        foreach (range(1, 6) as $courseNumber) {
+            $racerBoatNumberXPath = sprintf($racerBoatNumberFormat, $this->baseXPath, $this->baseLevel + 5, $courseNumber);
+            $racerStartTimingXPath = sprintf($racerStartTimingFormat, $this->baseXPath, $this->baseLevel + 5, $courseNumber);
 
             $racerBoatNumber = $this->filterXPath($scraper, $racerBoatNumberXPath);
             $racerStartTiming = $this->filterXPath($scraper, $racerStartTimingXPath);
@@ -115,7 +115,7 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $racerStartTiming = Converter::parseStartTiming($racerStartTiming);
 
             $response['boats'][$racerBoatNumber]['racer_boat_number'] = $racerBoatNumber;
-            $response['boats'][$racerBoatNumber]['racer_course_number'] = $index;
+            $response['boats'][$racerBoatNumber]['racer_course_number'] = $courseNumber;
             $response['boats'][$racerBoatNumber]['racer_start_timing'] = $racerStartTiming;
         }
 
