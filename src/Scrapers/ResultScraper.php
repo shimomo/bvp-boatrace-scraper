@@ -153,10 +153,10 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $racerNumber = Converter::convertToInt($racerNumber);
             $racerName = Converter::convertToName($racerName);
 
-            $response['places'][$racerPlaceNumber]['racer_place_number'] = $racerPlaceNumber;
-            $response['places'][$racerPlaceNumber]['racer_boat_number'] = $racerBoatNumber;
-            $response['places'][$racerPlaceNumber]['racer_number'] = $racerNumber;
-            $response['places'][$racerPlaceNumber]['racer_name'] = $racerName;
+            $response['boats'][$racerBoatNumber]['racer_boat_number'] = $racerBoatNumber;
+            $response['boats'][$racerBoatNumber]['racer_place_number'] = $racerPlaceNumber;
+            $response['boats'][$racerBoatNumber]['racer_number'] = $racerNumber;
+            $response['boats'][$racerBoatNumber]['racer_name'] = $racerName;
         }
 
         return $response;
