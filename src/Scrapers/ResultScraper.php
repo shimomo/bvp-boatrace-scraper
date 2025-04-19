@@ -176,6 +176,8 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $response['boats'][$racerBoatNumber]['racer_name'] = $racerName;
         }
 
+        ksort($response['boats']);
+
         return $response;
     }
 }
