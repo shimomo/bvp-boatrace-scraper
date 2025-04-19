@@ -84,6 +84,52 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
         $response['race_water_temperature'] = $raceWaterTemperature;
         $response['race_technique_number'] = $raceTechniqueNumber;
 
+        $response += $this->scrapeBoats($scraper, $raceStadiumNumber, $raceNumber);
+
+        $refundFormat = '%s/div[2]/div[%s]/div[1]/div/table/tbody[%s]/tr[%s]/td[%s]/span';
+        $refundTypes = [
+            'trifecta',
+            'trio',
+            'exacta',
+            'quinella',
+            'quinella_place',
+            'win',
+            'place',
+        ];
+
+        foreach ($refundTypes as $key => $value) {
+            $response['refunds'][$value] = [];
+
+            for ($trLevel = 1; $trLevel <= 10; $trLevel++) {
+                $tdLevel = $trLevel === 1 ? 3 : 2;
+
+                $refundXPath = sprintf($refundFormat, $this->baseXPath, $this->baseLevel + 6, $key + 1, $trLevel, $tdLevel);
+                $refund = $this->filterXPath($scraper, $refundXPath);
+
+                if (!str_starts_with($refund ?? '', '¥')) {
+                    break;
+                }
+
+                $refund = str_replace('¥', '', $refund);
+                $refund = str_replace(',', '', $refund);
+
+                $response['refunds'][$value][] = Converter::convertToInt($refund);
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param  \Symfony\Component\DomCrawler\Crawler  $scraper
+     * @param  int                                    $raceStadiumNumber
+     * @param  int                                    $raceNumber
+     * @return array
+     */
+    private function scrapeBoats(Crawler $scraper, int $raceStadiumNumber, int $raceNumber): array
+    {
+        $response = [];
+
         $racerBoatNumberFormat = '%s/div[2]/div[%s]/div[2]/div/table/tbody/tr[%s]/td/div/span[1]';
         $racerStartTimingFormat = '%s/div[2]/div[%s]/div[2]/div/table/tbody/tr[%s]/td/div/span[3]/span';
 
@@ -128,37 +174,6 @@ class ResultScraper extends BaseScraper implements ResultScraperInterface
             $response['boats'][$racerBoatNumber]['racer_place_number'] = $racerPlaceNumber;
             $response['boats'][$racerBoatNumber]['racer_number'] = $racerNumber;
             $response['boats'][$racerBoatNumber]['racer_name'] = $racerName;
-        }
-
-        $refundFormat = '%s/div[2]/div[%s]/div[1]/div/table/tbody[%s]/tr[%s]/td[%s]/span';
-        $refundTypes = [
-            'trifecta',
-            'trio',
-            'exacta',
-            'quinella',
-            'quinella_place',
-            'win',
-            'place',
-        ];
-
-        foreach ($refundTypes as $key => $value) {
-            $response['refunds'][$value] = [];
-
-            for ($trLevel = 1; $trLevel <= 10; $trLevel++) {
-                $tdLevel = $trLevel === 1 ? 3 : 2;
-
-                $refundXPath = sprintf($refundFormat, $this->baseXPath, $this->baseLevel + 6, $key + 1, $trLevel, $tdLevel);
-                $refund = $this->filterXPath($scraper, $refundXPath);
-
-                if (!str_starts_with($refund ?? '', '¥')) {
-                    break;
-                }
-
-                $refund = str_replace('¥', '', $refund);
-                $refund = str_replace(',', '', $refund);
-
-                $response['refunds'][$value][] = Converter::convertToInt($refund);
-            }
         }
 
         return $response;
