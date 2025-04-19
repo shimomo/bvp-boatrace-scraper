@@ -37,7 +37,6 @@ final class ResultScraperTest extends TestCase
     #[DataProviderExternal(ResultScraperDataProvider::class, 'scrapeProvider')]
     public function testScrape(array $arguments, array $expected): void
     {
-        $this->markTestSkipped('一時的にスキップ中');
         $this->assertSame($expected, $this->scraper->scrape(...$arguments));
     }
 }
