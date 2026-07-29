@@ -54,4 +54,49 @@ final class OddsScraperTest extends TestCase
     {
         $this->assertSame($expected, $this->scraper->scrape(...$arguments));
     }
+
+    /**
+     * @psalm-param RaceArguments $arguments
+     * @psalm-param RaceExpected $expected
+     * @psalm-return void
+     *
+     * @param array $arguments
+     * @param array $expected
+     * @return void
+     */
+    #[DataProviderExternal(OddsScraperDataProvider::class, 'scrapeSingleProvider')]
+    public function testScrapeSingle(array $arguments, array $expected): void
+    {
+        $this->assertSame($expected, $this->scraper->scrapeSingle(...$arguments));
+    }
+
+    /**
+     * @psalm-param RaceArguments $arguments
+     * @psalm-param RaceExpected $expected
+     * @psalm-return void
+     *
+     * @param array $arguments
+     * @param array $expected
+     * @return void
+     */
+    #[DataProviderExternal(OddsScraperDataProvider::class, 'scrapePairProvider')]
+    public function testScrapePair(array $arguments, array $expected): void
+    {
+        $this->assertSame($expected, $this->scraper->scrapePair(...$arguments));
+    }
+
+    /**
+     * @psalm-param RaceArguments $arguments
+     * @psalm-param RaceExpected $expected
+     * @psalm-return void
+     *
+     * @param array $arguments
+     * @param array $expected
+     * @return void
+     */
+    #[DataProviderExternal(OddsScraperDataProvider::class, 'scrapeTripleProvider')]
+    public function testScrapeTriple(array $arguments, array $expected): void
+    {
+        $this->assertSame($expected, $this->scraper->scrapeTriple(...$arguments));
+    }
 }

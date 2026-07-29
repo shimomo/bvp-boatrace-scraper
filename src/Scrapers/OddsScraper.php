@@ -183,6 +183,21 @@ final class OddsScraper extends BaseScraper implements Scraper
      * @param int<1, 12> $raceNumber
      * @return array<non-empty-string, mixed>
      */
+    public function scrapeTriple(CarbonInterface $date, int $stadiumNumber, int $raceNumber): array
+    {
+        $response = $this->scrapeTrifecta($date, $stadiumNumber, $raceNumber);
+        $this->rateLimiter->throttle();
+        $response += $this->scrapeTrio($date, $stadiumNumber, $raceNumber);
+
+        return $response;
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface $date
+     * @param int<1, 24> $stadiumNumber
+     * @param int<1, 12> $raceNumber
+     * @return array<non-empty-string, mixed>
+     */
     public function scrapeExacta(CarbonInterface $date, int $stadiumNumber, int $raceNumber): array
     {
         return $this->scrapeExactaAndQuinella($date, $stadiumNumber, $raceNumber);
@@ -312,6 +327,21 @@ final class OddsScraper extends BaseScraper implements Scraper
      * @param int<1, 12> $raceNumber
      * @return array<non-empty-string, mixed>
      */
+    public function scrapePair(CarbonInterface $date, int $stadiumNumber, int $raceNumber): array
+    {
+        $response = $this->scrapeExactaAndQuinella($date, $stadiumNumber, $raceNumber);
+        $this->rateLimiter->throttle();
+        $response += $this->scrapeQuinellaPlace($date, $stadiumNumber, $raceNumber);
+
+        return $response;
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface $date
+     * @param int<1, 24> $stadiumNumber
+     * @param int<1, 12> $raceNumber
+     * @return array<non-empty-string, mixed>
+     */
     public function scrapeWin(CarbonInterface $date, int $stadiumNumber, int $raceNumber): array
     {
         return $this->scrapeWinAndPlace($date, $stadiumNumber, $raceNumber);
@@ -359,6 +389,17 @@ final class OddsScraper extends BaseScraper implements Scraper
         }
 
         return $response;
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface $date
+     * @param int<1, 24> $stadiumNumber
+     * @param int<1, 12> $raceNumber
+     * @return array<non-empty-string, mixed>
+     */
+    public function scrapeSingle(CarbonInterface $date, int $stadiumNumber, int $raceNumber): array
+    {
+        return $this->scrapeWinAndPlace($date, $stadiumNumber, $raceNumber);
     }
 
     /**

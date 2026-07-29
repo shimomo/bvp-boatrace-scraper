@@ -174,6 +174,29 @@ final class Scraper
      * @param bool $forceRefresh
      * @return array<non-empty-string, mixed>
      */
+    public function scrapeSingle(
+        CarbonInterface|string $date,
+        int $stadiumNumber,
+        int $raceNumber,
+        bool $forceRefresh = false,
+    ): array {
+        return $this->scrapeOddsBetType(
+            'single',
+            $date,
+            $stadiumNumber,
+            $raceNumber,
+            $this->oddsScraper->scrapeSingle(...),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param int<1, 24> $stadiumNumber
+     * @param int<1, 12> $raceNumber
+     * @param bool $forceRefresh
+     * @return array<non-empty-string, mixed>
+     */
     public function scrapeExacta(
         CarbonInterface|string $date,
         int $stadiumNumber,
@@ -243,6 +266,29 @@ final class Scraper
      * @param bool $forceRefresh
      * @return array<non-empty-string, mixed>
      */
+    public function scrapePair(
+        CarbonInterface|string $date,
+        int $stadiumNumber,
+        int $raceNumber,
+        bool $forceRefresh = false,
+    ): array {
+        return $this->scrapeOddsBetType(
+            'pair',
+            $date,
+            $stadiumNumber,
+            $raceNumber,
+            $this->oddsScraper->scrapePair(...),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param int<1, 24> $stadiumNumber
+     * @param int<1, 12> $raceNumber
+     * @param bool $forceRefresh
+     * @return array<non-empty-string, mixed>
+     */
     public function scrapeTrifecta(
         CarbonInterface|string $date,
         int $stadiumNumber,
@@ -278,6 +324,29 @@ final class Scraper
             $stadiumNumber,
             $raceNumber,
             $this->oddsScraper->scrapeTrio(...),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param int<1, 24> $stadiumNumber
+     * @param int<1, 12> $raceNumber
+     * @param bool $forceRefresh
+     * @return array<non-empty-string, mixed>
+     */
+    public function scrapeTriple(
+        CarbonInterface|string $date,
+        int $stadiumNumber,
+        int $raceNumber,
+        bool $forceRefresh = false,
+    ): array {
+        return $this->scrapeOddsBetType(
+            'triple',
+            $date,
+            $stadiumNumber,
+            $raceNumber,
+            $this->oddsScraper->scrapeTriple(...),
             $forceRefresh,
         );
     }
@@ -488,6 +557,226 @@ final class Scraper
             $stadiumNumbers,
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeOdds($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapeWinBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeWin($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapePlaceBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapePlace($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapeSingleBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeSingle($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapeExactaBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeExacta($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapeQuinellaBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeQuinella($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapeQuinellaPlaceBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeQuinellaPlace($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapePairBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapePair($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapeTrifectaBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeTrifecta($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapeTrioBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeTrio($d, $s, $r, $forceRefresh),
+            $forceRefresh,
+        );
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|non-empty-string $date
+     * @param list<int<1, 24>> $stadiumNumbers
+     * @param list<int<1, 12>> $raceNumbers
+     * @param bool $forceRefresh
+     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
+     */
+    public function scrapeTripleBulk(
+        CarbonInterface|string $date,
+        array $stadiumNumbers = [],
+        array $raceNumbers = [],
+        bool $forceRefresh = false,
+    ): array {
+        return $this->bulk(
+            $date,
+            $stadiumNumbers,
+            $raceNumbers,
+            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeTriple($d, $s, $r, $forceRefresh),
             $forceRefresh,
         );
     }

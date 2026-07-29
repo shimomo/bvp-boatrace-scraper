@@ -45,10 +45,13 @@ composer require bvp/scraper
 | `scrapePreview($date, $stadiumNumber, $raceNumber)` | 直前情報を取得 | 同上 |
 | `scrapeOdds($date, $stadiumNumber, $raceNumber)` | 全オッズ（7種）を取得 | 同上 |
 | `scrapeWin` / `scrapePlace` / `scrapeExacta` / `scrapeQuinella` / `scrapeQuinellaPlace` / `scrapeTrifecta` / `scrapeTrio` | 単勝・複勝・2連単・2連複・拡連複・3連単・3連複のオッズを個別に取得 | 同上 |
+| `scrapeSingle` / `scrapePair` / `scrapeTriple` | 単勝・複勝 / 2連単・2連複・拡連複 / 3連単・3連複をまとめて取得 | 同上 |
 | `scrapeResult($date, $stadiumNumber, $raceNumber)` | 結果を取得 | 同上 |
 | `scrapeStadium($date)` | 開催中の場を取得 | `$date` のみ |
 | `scrapeProgramBulk($date, $stadiumNumbers = [], $raceNumbers = [])` | 出走表を一括取得 | `$stadiumNumbers`/`$raceNumbers` 省略時はその日開催している全場・全レース |
 | `scrapePreviewBulk` / `scrapeOddsBulk` / `scrapeResultBulk` | 同上の一括取得版 | 同上 |
+| `scrapeWinBulk` / `scrapePlaceBulk` / `scrapeExactaBulk` / `scrapeQuinellaBulk` / `scrapeQuinellaPlaceBulk` / `scrapeTrifectaBulk` / `scrapeTrioBulk` | 同上の一括取得版 | 同上 |
+| `scrapeSingleBulk` / `scrapePairBulk` / `scrapeTripleBulk` | 同上の一括取得版 | 同上 |
 
 **$date の例**
 - `'2025-01-01'`

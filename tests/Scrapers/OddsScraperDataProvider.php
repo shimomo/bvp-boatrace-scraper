@@ -24,6 +24,82 @@ final class OddsScraperDataProvider
      *
      * @return array
      */
+    public static function scrapeSingleProvider(): array
+    {
+        return self::filterProvider(['date', 'stadium_number', 'race_number', 'win', 'place']);
+    }
+
+    /**
+     * @psalm-return non-empty-list<
+     *     array{
+     *         arguments: RaceArguments,
+     *         expected: RaceExpected,
+     *     }
+     * >
+     *
+     * @return array
+     */
+    public static function scrapePairProvider(): array
+    {
+        return self::filterProvider(['date', 'stadium_number', 'race_number', 'exacta', 'quinella', 'quinella_place']);
+    }
+
+    /**
+     * @psalm-return non-empty-list<
+     *     array{
+     *         arguments: RaceArguments,
+     *         expected: RaceExpected,
+     *     }
+     * >
+     *
+     * @return array
+     */
+    public static function scrapeTripleProvider(): array
+    {
+        return self::filterProvider(['date', 'stadium_number', 'race_number', 'trifecta', 'trio']);
+    }
+
+    /**
+     * Reuses scrapeProvider()'s already-verified fixtures, narrowed down to
+     * the keys a given combined scrape*() method actually returns.
+     *
+     * @psalm-param non-empty-list<non-empty-string> $keys
+     * @psalm-return non-empty-list<
+     *     array{
+     *         arguments: RaceArguments,
+     *         expected: RaceExpected,
+     *     }
+     * >
+     *
+     * @param array $keys
+     * @return array
+     */
+    private static function filterProvider(array $keys): array
+    {
+        return array_map(
+            static function (array $row) use ($keys): array {
+                /** @var RaceExpected $expected */
+                $expected = array_intersect_key($row['expected'], array_flip($keys));
+
+                return [
+                    'arguments' => $row['arguments'],
+                    'expected' => $expected,
+                ];
+            },
+            self::scrapeProvider(),
+        );
+    }
+
+    /**
+     * @psalm-return non-empty-list<
+     *     array{
+     *         arguments: RaceArguments,
+     *         expected: RaceExpected,
+     *     }
+     * >
+     *
+     * @return array
+     */
     public static function scrapeProvider(): array
     {
         return [

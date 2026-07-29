@@ -74,6 +74,36 @@ final class ScraperTest extends TestCase
         $this->assertSame([$stadiumNumber => [$raceNumber => $expected]], $result);
     }
 
+    public function testScrapeSingleBulkFansOutOverExplicitStadiumAndRace(): void
+    {
+        [$date, $stadiumNumber, $raceNumber] = OddsScraperDataProvider::scrapeSingleProvider()[0]['arguments'];
+        $expected = OddsScraperDataProvider::scrapeSingleProvider()[0]['expected'];
+
+        $result = $this->scraper->scrapeSingleBulk($date, [$stadiumNumber], [$raceNumber]);
+
+        $this->assertSame([$stadiumNumber => [$raceNumber => $expected]], $result);
+    }
+
+    public function testScrapePairBulkFansOutOverExplicitStadiumAndRace(): void
+    {
+        [$date, $stadiumNumber, $raceNumber] = OddsScraperDataProvider::scrapePairProvider()[0]['arguments'];
+        $expected = OddsScraperDataProvider::scrapePairProvider()[0]['expected'];
+
+        $result = $this->scraper->scrapePairBulk($date, [$stadiumNumber], [$raceNumber]);
+
+        $this->assertSame([$stadiumNumber => [$raceNumber => $expected]], $result);
+    }
+
+    public function testScrapeTripleBulkFansOutOverExplicitStadiumAndRace(): void
+    {
+        [$date, $stadiumNumber, $raceNumber] = OddsScraperDataProvider::scrapeTripleProvider()[0]['arguments'];
+        $expected = OddsScraperDataProvider::scrapeTripleProvider()[0]['expected'];
+
+        $result = $this->scraper->scrapeTripleBulk($date, [$stadiumNumber], [$raceNumber]);
+
+        $this->assertSame([$stadiumNumber => [$raceNumber => $expected]], $result);
+    }
+
     public function testScrapeResultRejectsInvalidStadiumNumber(): void
     {
         $this->expectException(ValueError::class);
