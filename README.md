@@ -48,10 +48,17 @@ composer require bvp/scraper
 | `scrapeSingle` / `scrapePair` / `scrapeTriple` | 単勝・複勝 / 2連単・2連複・拡連複 / 3連単・3連複をまとめて取得 | 同上 |
 | `scrapeResult($date, $stadiumNumber, $raceNumber)` | 結果を取得 | 同上 |
 | `scrapeStadium($date)` | 開催中の場を取得 | `$date` のみ |
-| `scrapeProgramBulk($date, $stadiumNumbers = [], $raceNumbers = [])` | 出走表を一括取得 | `$stadiumNumbers`/`$raceNumbers` 省略時はその日開催している全場・全レース |
-| `scrapePreviewBulk` / `scrapeOddsBulk` / `scrapeResultBulk` | 同上の一括取得版 | 同上 |
-| `scrapeWinBulk` / `scrapePlaceBulk` / `scrapeExactaBulk` / `scrapeQuinellaBulk` / `scrapeQuinellaPlaceBulk` / `scrapeTrifectaBulk` / `scrapeTrioBulk` | 同上の一括取得版 | 同上 |
-| `scrapeSingleBulk` / `scrapePairBulk` / `scrapeTripleBulk` | 同上の一括取得版 | 同上 |
+
+一括取得は `BatchScraper` が提供します。メソッド名は `Scraper` と同名で、引数だけが一括用（`$stadiumNumber`/`$raceNumber` → `$stadiumNumbers`/`$raceNumbers`）になります。
+
+| メソッド | 説明 | 引数 |
+|---|---|---|
+| `scrapeProgram($date, $stadiumNumbers = [], $raceNumbers = [])` | 出走表を一括取得 | `$stadiumNumbers`/`$raceNumbers` 省略時はその日開催している全場・全レース |
+| `scrapePreview` / `scrapeOdds` / `scrapeResult` | 同上の一括取得版 | 同上 |
+| `scrapeWin` / `scrapePlace` / `scrapeExacta` / `scrapeQuinella` / `scrapeQuinellaPlace` / `scrapeTrifecta` / `scrapeTrio` | 同上の一括取得版 | 同上 |
+| `scrapeSingle` / `scrapePair` / `scrapeTriple` | 同上の一括取得版 | 同上 |
+
+> **Deprecated**: `Scraper` 側の `scrape*Bulk()`（`scrapeProgramBulk` など 14 メソッド）は非推奨です。内部で `BatchScraper` に委譲しているため動作は変わりませんが、`BatchScraper` の同名メソッドへ移行してください。
 
 **$date の例**
 - `'2025-01-01'`
@@ -91,11 +98,16 @@ print_r($result);
 ### 一括取得
 
 ```php
+use BVP\Scraper\BatchScraper;
+
+// レート制御・キャッシュを共有したい場合は既存の Scraper を渡す（省略時は内部で生成）
+$batchScraper = new BatchScraper($scraper);
+
 // その日開催している全場・全レースの結果を取得
-$results = $scraper->scrapeResultBulk('2025-01-01');
+$results = $batchScraper->scrapeResult('2025-01-01');
 
 // 開催場・レースを絞り込む
-$results = $scraper->scrapeResultBulk('2025-01-01', [24], [1, 2, 3]);
+$results = $batchScraper->scrapeResult('2025-01-01', [24], [1, 2, 3]);
 ```
 
 ### レスポンス形式（`_source` / 変換済み値）
@@ -151,7 +163,7 @@ $scraper->scrapeResult('2017-03-31', 24, 1);
 $scraper->scrapeResult('2017-03-31', 24, 1, forceRefresh: true);
 ```
 
-`forceRefresh` は全ての `scrape*()`/`scrape*Bulk()` メソッドに指定できます（`scrape*Bulk()` に指定した場合、開催場一覧の解決も含めて一括分すべてが再取得されます）。
+`forceRefresh` は `Scraper`/`BatchScraper` の全ての `scrape*()` メソッドに指定できます（`BatchScraper` に指定した場合、開催場一覧の解決も含めて一括分すべてが再取得されます）。
 
 ### 並行実行・マルチテナンシー
 

@@ -30,6 +30,9 @@ use Symfony\Component\BrowserKit\HttpBrowser;
  * cache state. There is deliberately no static singleton facade — construct
  * as many instances as your use case needs.
  *
+ * Bulk fan-out over a stadium/race grid now lives in {@see BatchScraper};
+ * the scrape*Bulk() methods below are deprecated shims delegating to it.
+ *
  * @author shimomo
  */
 final class Scraper
@@ -70,6 +73,14 @@ final class Scraper
     private readonly OddsScraper $oddsScraper;
 
     /**
+     * Backs the deprecated scrape*Bulk() methods only, so they and
+     * {@see BatchScraper} can never drift apart.
+     *
+     * @var \BVP\Scraper\BatchScraper
+     */
+    private readonly BatchScraper $batchScraper;
+
+    /**
      * @param ?\Symfony\Component\BrowserKit\HttpBrowser $httpBrowser
      * @param \BVP\Scraper\RateLimiting\RateLimiterInterface $rateLimiter
      * @param ?\Psr\SimpleCache\CacheInterface $cache
@@ -91,6 +102,7 @@ final class Scraper
         $this->programScraper = new ProgramScraper($this->httpBrowser);
         $this->previewScraper = new PreviewScraper($this->httpBrowser);
         $this->oddsScraper = new OddsScraper($this->httpBrowser, $this->rateLimiter);
+        $this->batchScraper = new BatchScraper($this);
     }
 
     /**
@@ -474,6 +486,8 @@ final class Scraper
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeResult()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -486,16 +500,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeResult($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeResult($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeProgram()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -508,16 +518,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeProgram($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeProgram($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapePreview()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -530,16 +536,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapePreview($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapePreview($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeOdds()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -552,16 +554,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeOdds($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeOdds($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeWin()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -574,16 +572,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeWin($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeWin($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapePlace()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -596,16 +590,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapePlace($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapePlace($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeSingle()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -618,16 +608,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeSingle($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeSingle($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeExacta()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -640,16 +626,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeExacta($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeExacta($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeQuinella()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -662,16 +644,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeQuinella($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeQuinella($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeQuinellaPlace()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -684,16 +662,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeQuinellaPlace($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeQuinellaPlace($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapePair()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -706,16 +680,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapePair($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapePair($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeTrifecta()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -728,16 +698,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeTrifecta($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeTrifecta($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeTrio()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -750,16 +716,12 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeTrio($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
+        return $this->batchScraper->scrapeTrio($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
+     * @deprecated Use {@see \BVP\Scraper\BatchScraper::scrapeTriple()} instead.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
@@ -772,55 +734,7 @@ final class Scraper
         array $raceNumbers = [],
         bool $forceRefresh = false,
     ): array {
-        return $this->bulk(
-            $date,
-            $stadiumNumbers,
-            $raceNumbers,
-            fn(CarbonInterface $d, int $s, int $r): array => $this->scrapeTriple($d, $s, $r, $forceRefresh),
-            $forceRefresh,
-        );
-    }
-
-    /**
-     * Resolves $stadiumNumbers (defaulting to all 24) against the stadiums
-     * actually racing on $date, then fans $scrapeOne out across the
-     * resulting stadium/race grid. Every call still routes through the
-     * single-race scrape*() methods above, so cache/rate-limiter/retry
-     * behavior is uniform whether called one race at a time or in bulk.
-     *
-     * @param \Carbon\CarbonInterface|non-empty-string $date
-     * @param list<int<1, 24>> $stadiumNumbers
-     * @param list<int<1, 12>> $raceNumbers
-     * @param callable(CarbonInterface, int<1, 24>, int<1, 12>): array<non-empty-string, mixed> $scrapeOne
-     * @param bool $forceRefresh
-     * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
-     */
-    private function bulk(
-        CarbonInterface|string $date,
-        array $stadiumNumbers,
-        array $raceNumbers,
-        callable $scrapeOne,
-        bool $forceRefresh = false,
-    ): array {
-        $parsedDate = Carbon::parse($date);
-
-        /** @var list<int<1, 24>> $candidateStadiumNumbers */
-        $candidateStadiumNumbers = array_unique($stadiumNumbers ?: range(1, 24));
-        /** @var list<int<1, 12>> $uniqueRaceNumbers */
-        $uniqueRaceNumbers = array_unique($raceNumbers ?: range(1, 12));
-
-        /** @var list<int<1, 24>> $activeStadiumNumbers */
-        $activeStadiumNumbers = array_keys($this->scrapeStadium($parsedDate, $forceRefresh));
-        $stadiumNumbersToScrape = array_intersect($candidateStadiumNumbers, $activeStadiumNumbers);
-
-        $response = [];
-        foreach ($stadiumNumbersToScrape as $stadiumNumber) {
-            foreach ($uniqueRaceNumbers as $raceNumber) {
-                $response[$stadiumNumber][$raceNumber] = $scrapeOne($parsedDate, $stadiumNumber, $raceNumber);
-            }
-        }
-
-        return $response;
+        return $this->batchScraper->scrapeTriple($date, $stadiumNumbers, $raceNumbers, $forceRefresh);
     }
 
     /**
