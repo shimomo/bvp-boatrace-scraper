@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BVP\Scraper\Tests\Enums;
 
 use BVP\Scraper\Enums\Grade;
+use BVP\Scraper\Enums\Part;
 use BVP\Scraper\Enums\Place;
 use BVP\Scraper\Enums\Prefecture;
 use BVP\Scraper\Enums\Rank;
@@ -72,6 +73,20 @@ final class EnumsTest extends TestCase
         $this->assertSame('1着', Place::一着->name());
         $this->assertSame('1', Place::一着->shortName());
         $this->assertSame(Place::一着, Place::fromShortName('1'));
+    }
+
+    public function testPartShortNameIsTheAbbreviationPrintedInTheTable(): void
+    {
+        $this->assertSame('ピストンリング', Part::ピストンリング->name());
+        $this->assertSame('リング', Part::ピストンリング->shortName());
+        $this->assertSame(Part::ピストンリング, Part::fromShortName('リング'));
+    }
+
+    public function testPartFromShortNameThrowsOnUnknownShortName(): void
+    {
+        $this->expectException(ValueError::class);
+
+        Part::fromShortName('unknown');
     }
 
     public function testRankShortNameRoundTrip(): void

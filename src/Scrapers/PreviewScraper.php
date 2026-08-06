@@ -38,6 +38,8 @@ final class PreviewScraper extends BaseScraper implements Scraper
         'exhibition_time',
         'tilt_adjustment_source',
         'tilt_adjustment',
+        'propeller',
+        'parts',
     ];
 
     /**
@@ -191,6 +193,19 @@ final class PreviewScraper extends BaseScraper implements Scraper
             $tiltAdjustmentXPath = sprintf($tiltAdjustmentFormat, $this->baseXPath, $this->baseLevel + 5, $index);
             $tiltAdjustment = PreviewParser::parseTiltAdjustment(Filter::byXPath($scraper, $tiltAdjustmentXPath));
 
+            $propellerFormat = '%s/div[2]/div[%d]/div[1]/div[1]/table/tbody[%s]/tr[1]/td[7]';
+            $propellerXPath = sprintf($propellerFormat, $this->baseXPath, $this->baseLevel + 5, $index);
+            $propeller = PreviewParser::parsePropeller(Filter::byXPath($scraper, $propellerXPath));
+
+            // Look for the cell itself before counting the li, so that a missing
+            // cell stays apart from a cell holding no exchange.
+            $partsFormat = '%s/div[2]/div[%d]/div[1]/div[1]/table/tbody[%s]/tr[1]/td[8]';
+            $partsXPath = sprintf($partsFormat, $this->baseXPath, $this->baseLevel + 5, $index);
+            $partsSource = Filter::byXPath($scraper, $partsXPath) === null
+                ? null
+                : Filter::byXPathAsList($scraper, $partsXPath . '/ul/li');
+            $parts = PreviewParser::parseParts($partsSource);
+
             if (!isset($entryNumber['entry_number'])) {
                 $entryNumber['entry_number'] = $index;
             }
@@ -207,6 +222,8 @@ final class PreviewScraper extends BaseScraper implements Scraper
             $response[$entryNumberKey] += $weightAdjustment;
             $response[$entryNumberKey] += $exhibitionTime;
             $response[$entryNumberKey] += $tiltAdjustment;
+            $response[$entryNumberKey] += $propeller;
+            $response[$entryNumberKey] += $parts;
         }
 
         return $response;

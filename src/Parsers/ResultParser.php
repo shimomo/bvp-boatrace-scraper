@@ -74,6 +74,13 @@ final class ResultParser
     /**
      * @var non-empty-list<non-empty-string>
      */
+    private const array REMARKS_KEYS = [
+        'remarks',
+    ];
+
+    /**
+     * @var non-empty-list<non-empty-string>
+     */
     private const array START_TIMING_KEYS = [
         'start_timing_source',
         'start_timing',
@@ -224,6 +231,23 @@ final class ResultParser
         return array_combine(self::TECHNIQUE_KEYS, [
             Converter::toString($value),
             Converter::toInt(Converter::toEnumOrNull(fn() => Technique::fromName($value))?->value),
+        ]);
+    }
+
+    /**
+     * @param ?string $value
+     * @return array{
+     *     remarks: ?string,
+     * }
+     */
+    public static function parseRemarks(?string $value): array
+    {
+        if ($value === null || $value === '') {
+            return array_fill_keys(self::REMARKS_KEYS, null);
+        }
+
+        return array_combine(self::REMARKS_KEYS, [
+            Converter::toString($value),
         ]);
     }
 

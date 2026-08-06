@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BVP\Scraper\Parsers;
 
 use BVP\Scraper\Converters\Converter;
+use BVP\Scraper\Enums\Part;
 use BVP\Scraper\Enums\Weather;
 use BVP\Scraper\Enums\WindDirection;
 
@@ -100,6 +101,28 @@ final class PreviewParser
         'tilt_adjustment_source',
         'tilt_adjustment',
     ];
+
+    /**
+     * @var non-empty-list<non-empty-string>
+     */
+    private const array PROPELLER_KEYS = [
+        'propeller',
+    ];
+
+    /**
+     * @var non-empty-list<non-empty-string>
+     */
+    private const array PARTS_KEYS = [
+        'parts',
+    ];
+
+    /**
+     * A parts exchange cell holds either the short name on its own (`キャブ`)
+     * or the short name followed by a quantity (`ピストン×2`).
+     *
+     * @var non-empty-string
+     */
+    private const string PART_PATTERN = '/^(.+?)×(\d+)$/u';
 
     /**
      * @param ?string $value
@@ -326,6 +349,81 @@ final class PreviewParser
             Converter::toString($value),
             Converter::toFloat($value),
         ]);
+    }
+
+    /**
+     * The propeller column holds `新` when the propeller was exchanged and is
+     * empty otherwise. The wording is passed through without being interpreted.
+     *
+     * @param ?string $value
+     * @return array{
+     *     propeller: ?string,
+     * }
+     */
+    public static function parsePropeller(?string $value): array
+    {
+        if ($value === null || $value === '') {
+            return array_fill_keys(self::PROPELLER_KEYS, null);
+        }
+
+        return array_combine(self::PROPELLER_KEYS, [
+            Converter::toString($value),
+        ]);
+    }
+
+    /**
+     * One element per exchanged part. A missing cell, that is a preview that is
+     * not published yet, gives null, while a cell holding no exchange gives an
+     * empty list, so that the two are not mistaken for each other.
+     *
+     * Some parts are printed without a quantity, and a ring is printed as
+     * `リング×1` even for a single one, so a missing quantity means the part is
+     * not counted rather than one of it. The quantity is left null in that
+     * case. An unknown short name keeps its element and only leaves
+     * part_number null.
+     *
+     * @param ?list<string> $values
+     * @return array{
+     *     parts: ?list<array{
+     *         part_number_source: ?string,
+     *         part_number: ?int,
+     *         quantity: ?int,
+     *     }>,
+     * }
+     */
+    public static function parseParts(?array $values): array
+    {
+        if ($values === null) {
+            return array_fill_keys(self::PARTS_KEYS, null);
+        }
+
+        $parts = [];
+
+        foreach ($values as $value) {
+            $value = Converter::trim($value);
+
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            $shortName = $value;
+            $quantity = null;
+
+            if (preg_match(self::PART_PATTERN, $value, $matches)) {
+                $shortName = $matches[1];
+                $quantity = $matches[2];
+            }
+
+            $parts[] = [
+                'part_number_source' => Converter::toString($shortName),
+                'part_number' => Converter::toInt(
+                    Converter::toEnumOrNull(fn() => Part::fromShortName($shortName))?->value
+                ),
+                'quantity' => Converter::toInt($quantity),
+            ];
+        }
+
+        return array_combine(self::PARTS_KEYS, [$parts]);
     }
 
     /**

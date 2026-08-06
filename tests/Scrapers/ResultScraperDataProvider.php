@@ -47,6 +47,7 @@ final class ResultScraperDataProvider
                     'water_temperature' => 14.0,
                     'technique_number_source' => '逃げ',
                     'technique_number' => 1,
+                    'remarks' => null,
                     'racers' => [
                         1 => [
                             'entry_number' => 1,
@@ -181,6 +182,7 @@ final class ResultScraperDataProvider
                             ],
                         ],
                     ],
+                    'refunds' => [],
                 ],
             ],
             [
@@ -203,6 +205,7 @@ final class ResultScraperDataProvider
                     'water_temperature' => null,
                     'technique_number_source' => null,
                     'technique_number' => null,
+                    'remarks' => null,
                     'racers' => [
                         1 => [
                             'entry_number' => 1,
@@ -280,6 +283,7 @@ final class ResultScraperDataProvider
                         'win' => [],
                         'place' => [],
                     ],
+                    'refunds' => [],
                 ],
             ],
             [
@@ -302,6 +306,7 @@ final class ResultScraperDataProvider
                     'water_temperature' => 28.0,
                     'technique_number_source' => 'まくり差し',
                     'technique_number' => 4,
+                    'remarks' => null,
                     'racers' => [
                         1 => [
                             'entry_number' => 1,
@@ -436,6 +441,7 @@ final class ResultScraperDataProvider
                             ],
                         ],
                     ],
+                    'refunds' => [],
                 ],
             ],
             [
@@ -458,6 +464,7 @@ final class ResultScraperDataProvider
                     'water_temperature' => 35.0,
                     'technique_number_source' => '恵まれ',
                     'technique_number' => 6,
+                    'remarks' => '【返還艇あり】',
                     'racers' => [
                         1 => [
                             'entry_number' => 1,
@@ -577,6 +584,7 @@ final class ResultScraperDataProvider
                             ],
                         ],
                     ],
+                    'refunds' => [1, 4, 5, 6],
                 ],
             ],
         ];

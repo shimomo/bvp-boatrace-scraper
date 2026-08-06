@@ -92,6 +92,10 @@ final class ResultScraper extends BaseScraper implements Scraper
         $techniqueXPath = sprintf($techniqueFormat, $this->baseXPath, $this->baseLevel + 6);
         $technique = ResultParser::parseTechnique(Filter::byXPath($scraper, $techniqueXPath));
 
+        $remarksFormat = '%s/div[2]/div[%d]/div[2]/div[2]/table/tbody/tr/td';
+        $remarksXPath = sprintf($remarksFormat, $this->baseXPath, $this->baseLevel + 6);
+        $remarks = ResultParser::parseRemarks(Filter::byXPath($scraper, $remarksXPath));
+
         $response = [];
 
         $response['date'] = $date->format('Y-m-d');
@@ -105,9 +109,11 @@ final class ResultScraper extends BaseScraper implements Scraper
         $response += $airTemperature;
         $response += $waterTemperature;
         $response += $technique;
+        $response += $remarks;
 
         $response += $this->scrapeRacers($scraper);
         $response += $this->scrapePayouts($scraper);
+        $response += $this->scrapeRefunds($scraper);
 
         return $response;
     }
@@ -462,5 +468,38 @@ final class ResultScraper extends BaseScraper implements Scraper
 
             return $value >= 0 ? $value : null;
         }, $templates);
+    }
+
+    /**
+     * Read the refunded boats, that is the boats whose stakes are returned
+     * after a false start, a late start or a withdrawal. The table is published
+     * as empty cells even when nothing was refunded, so an empty list is the
+     * normal case. The entry numbers are laid out three per row across two
+     * rows, and the leftover cells are filled with blank spans.
+     *
+     * @param \Symfony\Component\DomCrawler\Crawler $scraper
+     * @return array{
+     *     refunds: list<int>
+     * }
+     */
+    private function scrapeRefunds(Crawler $scraper): array
+    {
+        $response = ['refunds' => []];
+
+        foreach (range(1, 2) as $row) {
+            foreach (range(1, 3) as $column) {
+                $format = '%s/div[2]/div[%d]/div[2]/div[1]/div[2]/div[1]/table/tbody/tr/td/div/div[%d]/span[%d]';
+                $xpath = sprintf($format, $this->baseXPath, $this->baseLevel + 6, $row, $column);
+                $entryNumber = Converter::toInt(Filter::byXPath($scraper, $xpath));
+
+                if (!in_array($entryNumber, range(1, 6), true)) {
+                    continue;
+                }
+
+                $response['refunds'][] = $entryNumber;
+            }
+        }
+
+        return $response;
     }
 }
