@@ -1,10 +1,10 @@
 # Scraper
 
-[![php](https://poser.pugx.org/bvp/prefecture/require/php)](https://packagist.org/packages/bvp/prefecture)
-[![stable](https://poser.pugx.org/bvp/prefecture/v/stable)](https://packagist.org/packages/bvp/prefecture)
-[![license](https://poser.pugx.org/bvp/prefecture/license)](https://packagist.org/packages/bvp/prefecture)
+[![php](https://poser.pugx.org/bvp/scraper/require/php)](https://packagist.org/packages/bvp/scraper)
+[![stable](https://poser.pugx.org/bvp/scraper/v/stable)](https://packagist.org/packages/bvp/scraper)
+[![license](https://poser.pugx.org/bvp/scraper/license)](https://packagist.org/packages/bvp/scraper)
 
-[![test](https://github.com/shimomo/bvp-scraper/actions/workflows/test.yml/badge.svg)](https://github.com/shimomo/bvp-scraper/actions/workflows/test.yml)
+[![test](https://github.com/boatracevibeproject/scraper/actions/workflows/test.yml/badge.svg)](https://github.com/boatracevibeproject/scraper/actions/workflows/test.yml)
 [![psalm](https://github.com/boatracevibeproject/scraper/actions/workflows/psalm.yml/badge.svg)](https://github.com/boatracevibeproject/scraper/actions/workflows/psalm.yml)
 [![audit](https://github.com/boatracevibeproject/scraper/actions/workflows/audit.yml/badge.svg)](https://github.com/boatracevibeproject/scraper/actions/workflows/audit.yml)
 [![keepalive](https://github.com/boatracevibeproject/scraper/actions/workflows/keepalive.yml/badge.svg)](https://github.com/boatracevibeproject/scraper/actions/workflows/keepalive.yml)
@@ -12,7 +12,7 @@
 
 BVP Scraper は、ボートレースの公式サイトから出走表、直前情報、オッズ、結果をスクレイピングするための PHP ライブラリです。
 
-v10 では、後継ライブラリである [turnmark/scraper](https://github.com/turnmark/turnmark) とは異なる方向性を持つ派生として、以下の 2 点に力を入れています。
+v11 では、後継ライブラリである [turnmark/scraper](https://github.com/turnmark/turnmark) とは異なる方向性を持つ派生として、以下の 2 点に力を入れています。
 
 - **鮮度に応じたキャッシュ**: 確定済みの過去日のレースは不変とみなし、キャッシュに永続化。バックフィル用途で同じ日付を何度も取り直す必要がなくなります。
 - **インスタンス単位の並行実行**: レート制御・キャッシュ参照をインスタンススコープに保持するため、プロキシやワーカーごとに複数の `Scraper` インスタンスを同一プロセス内で干渉なく並行運用できます。
@@ -219,7 +219,13 @@ $scraperB = new Scraper(
 
 ## ⚠️ Notes
 
-- v10 は v6 との後方互換性を意図的に持たない大きな設計変更（インスタンスベース API・レスポンススキーマの変更）を含みます。既存の利用箇所は `bvp/scraper: ^6.0` に固定してください。
+- v11 はレスポンススキーマの破壊的変更を含みます。v10 から上げる場合は以下を確認してください。
+  - `payouts` の各行に `label` が加わりました。特払・不成立の行では `combination` が `null` になるため、`string` として型宣言している箇所は `?string` に変更が必要です。
+  - 数値でないオッズ（出走取消の文言など）と、欠損した払戻金額は `0` / `0.0` ではなく `null` を返すようになりました。`float` / `int` として型宣言している箇所は同様に変更が必要です。
+  - `racers` は常に 1〜6 号艇すべてを含みます。従来はページに載っていない艇のキー自体が欠落していました。
+  - 結果に `remarks` / `refunds`、直前情報に `propeller` / `parts` が加わりました。
+  - キャッシュの名前空間が変わるため、蓄積済みの過去日キャッシュは参照されなくなり、再取得が発生します。バックフィル用途で大量にためている場合は、レート制限のもとで再取得にかかる時間を見込んでください。
+- v10 は v6 との後方互換性を意図的に持たない大きな設計変更（インスタンスベース API・レスポンススキーマの変更）を含みます。v6 のまま利用する場合は `bvp/scraper: ^6.0` に固定してください。
 - **スクレイピング対象の公式サイトの構造が変更された場合**、正しくデータを取得できなくなる可能性があります。
 - 利用時は対象サイトの利用規約を遵守してください。
 
