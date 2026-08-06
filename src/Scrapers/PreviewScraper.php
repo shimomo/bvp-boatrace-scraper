@@ -18,6 +18,29 @@ use Symfony\Component\DomCrawler\Crawler;
 final class PreviewScraper extends BaseScraper implements Scraper
 {
     /**
+     * Every key a racer entry carries, in the order the two passes below fill
+     * them in. Used to shape all six entries, so that a boat the page does not
+     * print still comes back with the full set of keys rather than being left
+     * out.
+     *
+     * @var non-empty-list<non-empty-string>
+     */
+    private const array RACER_KEYS = [
+        'entry_number',
+        'course_number',
+        'start_timing_source',
+        'start_timing',
+        'weight_source',
+        'weight',
+        'weight_adjustment_source',
+        'weight_adjustment',
+        'exhibition_time_source',
+        'exhibition_time',
+        'tilt_adjustment_source',
+        'tilt_adjustment',
+    ];
+
+    /**
      * @var int<0, 1>
      */
     private int $baseLevel = 0;
@@ -91,7 +114,33 @@ final class PreviewScraper extends BaseScraper implements Scraper
      */
     private function scrapeRacers(Crawler $scraper): array
     {
+        $racers = $this->scrapePreviewTable($scraper);
+
+        $template = array_fill_keys(self::RACER_KEYS, null);
+
         $response = ['racers' => []];
+
+        foreach (range(1, 6) as $entryNumberKey) {
+            $response['racers'][$entryNumberKey] = array_replace($template, [
+                'entry_number' => $entryNumberKey,
+            ], $racers[$entryNumberKey] ?? []);
+        }
+
+        return $response;
+    }
+
+    /**
+     * The page splits a boat across two tables. The start display is ordered by
+     * course, so a boat's course is the row it stands in rather than anything
+     * printed; the table above it is ordered by entry number and carries the
+     * exhibition run. Both are read into the same boat.
+     *
+     * @param \Symfony\Component\DomCrawler\Crawler $scraper
+     * @return array<int, array<non-empty-string, mixed>>
+     */
+    private function scrapePreviewTable(Crawler $scraper): array
+    {
+        $response = [];
 
         foreach (range(1, 6) as $index) {
             $entryNumberFormat = '%s/div[2]/div[%d]/div[2]/div[1]/table/tbody/tr[%s]/td/div/span[1]';
@@ -115,10 +164,10 @@ final class PreviewScraper extends BaseScraper implements Scraper
                 continue;
             }
 
-            $response['racers'][$entryNumberKey] ??= [];
-            $response['racers'][$entryNumberKey] += $entryNumber;
-            $response['racers'][$entryNumberKey] += $course;
-            $response['racers'][$entryNumberKey] += $startTiming;
+            $response[$entryNumberKey] ??= [];
+            $response[$entryNumberKey] += $entryNumber;
+            $response[$entryNumberKey] += $course;
+            $response[$entryNumberKey] += $startTiming;
         }
 
         foreach (range(1, 6) as $index) {
@@ -152,15 +201,13 @@ final class PreviewScraper extends BaseScraper implements Scraper
                 continue;
             }
 
-            $response['racers'][$entryNumberKey] ??= [];
-            $response['racers'][$entryNumberKey] += $entryNumber;
-            $response['racers'][$entryNumberKey] += $weight;
-            $response['racers'][$entryNumberKey] += $weightAdjustment;
-            $response['racers'][$entryNumberKey] += $exhibitionTime;
-            $response['racers'][$entryNumberKey] += $tiltAdjustment;
+            $response[$entryNumberKey] ??= [];
+            $response[$entryNumberKey] += $entryNumber;
+            $response[$entryNumberKey] += $weight;
+            $response[$entryNumberKey] += $weightAdjustment;
+            $response[$entryNumberKey] += $exhibitionTime;
+            $response[$entryNumberKey] += $tiltAdjustment;
         }
-
-        ksort($response['racers'], SORT_NUMERIC);
 
         return $response;
     }

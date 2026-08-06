@@ -118,21 +118,33 @@ final class ResultScraper extends BaseScraper implements Scraper
      */
     private function scrapeRacers(Crawler $scraper): array
     {
-        if (!$this->hasResultTable($scraper)) {
-            $template = array_fill_keys(self::RACER_KEYS, null);
+        $racers = $this->hasResultTable($scraper) ? $this->scrapeResultTable($scraper) : [];
 
-            $response = ['racers' => []];
-
-            foreach (range(1, 6) as $entryNumberKey) {
-                $response['racers'][$entryNumberKey] = array_replace($template, [
-                    'entry_number' => $entryNumberKey,
-                ]);
-            }
-
-            return $response;
-        }
+        $template = array_fill_keys(self::RACER_KEYS, null);
 
         $response = ['racers' => []];
+
+        foreach (range(1, 6) as $entryNumberKey) {
+            $response['racers'][$entryNumberKey] = array_replace($template, [
+                'entry_number' => $entryNumberKey,
+            ], $racers[$entryNumberKey] ?? []);
+        }
+
+        return $response;
+    }
+
+    /**
+     * The page splits a boat across two tables. The start display is ordered by
+     * course, so a boat's course is the row it stands in rather than anything
+     * printed; the result table is ordered by finishing place. Both are read
+     * into the same boat, keyed by entry number.
+     *
+     * @param \Symfony\Component\DomCrawler\Crawler $scraper
+     * @return array<int, array<non-empty-string, mixed>>
+     */
+    private function scrapeResultTable(Crawler $scraper): array
+    {
+        $response = [];
 
         foreach (range(1, 6) as $index) {
             $entryNumberFormat = '%s/div[2]/div[%d]/div[2]/div/table/tbody/tr[%s]/td/div/span[1]';
@@ -156,10 +168,10 @@ final class ResultScraper extends BaseScraper implements Scraper
                 continue;
             }
 
-            $response['racers'][$entryNumberKey] ??= [];
-            $response['racers'][$entryNumberKey] += $entryNumber;
-            $response['racers'][$entryNumberKey] += $course;
-            $response['racers'][$entryNumberKey] += $startTiming;
+            $response[$entryNumberKey] ??= [];
+            $response[$entryNumberKey] += $entryNumber;
+            $response[$entryNumberKey] += $course;
+            $response[$entryNumberKey] += $startTiming;
         }
 
         foreach (range(1, 6) as $index) {
@@ -189,14 +201,12 @@ final class ResultScraper extends BaseScraper implements Scraper
                 continue;
             }
 
-            $response['racers'][$entryNumberKey] ??= [];
-            $response['racers'][$entryNumberKey] += $entryNumber;
-            $response['racers'][$entryNumberKey] += $place;
-            $response['racers'][$entryNumberKey] += $number;
-            $response['racers'][$entryNumberKey] += $name;
+            $response[$entryNumberKey] ??= [];
+            $response[$entryNumberKey] += $entryNumber;
+            $response[$entryNumberKey] += $place;
+            $response[$entryNumberKey] += $number;
+            $response[$entryNumberKey] += $name;
         }
-
-        ksort($response['racers'], SORT_NUMERIC);
 
         return $response;
     }
@@ -230,13 +240,13 @@ final class ResultScraper extends BaseScraper implements Scraper
      * @param \Symfony\Component\DomCrawler\Crawler $scraper
      * @return array{
      *     payouts?: array{
-     *         trifecta?: list<array{combination: non-empty-string, amount: int<0, max>}>,
-     *         trio?: list<array{combination: non-empty-string, amount: int<0, max>}>,
-     *         exacta?: list<array{combination: non-empty-string, amount: int<0, max>}>,
-     *         quinella?: list<array{combination: non-empty-string, amount: int<0, max>}>,
-     *         quinella_place?: list<array{combination: non-empty-string, amount: int<0, max>}>,
-     *         win?: list<array{combination: non-empty-string, amount: int<0, max>}>,
-     *         place?: list<array{combination: non-empty-string, amount: int<0, max>}>,
+     *         trifecta?: list<array{combination: ?string, amount: int<0, max>, label: ?string}>,
+     *         trio?: list<array{combination: ?string, amount: int<0, max>, label: ?string}>,
+     *         exacta?: list<array{combination: ?string, amount: int<0, max>, label: ?string}>,
+     *         quinella?: list<array{combination: ?string, amount: int<0, max>, label: ?string}>,
+     *         quinella_place?: list<array{combination: ?string, amount: int<0, max>, label: ?string}>,
+     *         win?: list<array{combination: ?string, amount: int<0, max>, label: ?string}>,
+     *         place?: list<array{combination: ?string, amount: int<0, max>, label: ?string}>,
      *     }
      * }
      */
@@ -253,12 +263,21 @@ final class ResultScraper extends BaseScraper implements Scraper
                     $response['payouts'][$name] = [];
                 }
 
-                if ($value !== '' && $amounts[$name][$index] !== null) {
-                    $response['payouts'][$name][] = [
-                        'combination' => $value,
-                        'amount' => $amounts[$name][$index],
-                    ];
+                $amount = $amounts[$name][$index] ?? null;
+
+                if ($amount === null) {
+                    continue;
                 }
+
+                if ($value['combination'] === null && $value['label'] === null) {
+                    continue;
+                }
+
+                $response['payouts'][$name][] = [
+                    'combination' => $value['combination'],
+                    'amount' => $amount,
+                    'label' => $value['label'],
+                ];
             }
         }
 
@@ -268,73 +287,96 @@ final class ResultScraper extends BaseScraper implements Scraper
     /**
      * @param \Symfony\Component\DomCrawler\Crawler $scraper
      * @return array{
-     *     trifecta: list<string>,
-     *     trio: list<string>,
-     *     exacta: list<string>,
-     *     quinella: list<string>,
-     *     quinella_place: list<string>,
-     *     win: list<string>,
-     *     place: list<string>,
+     *     trifecta: list<array{combination: ?string, label: ?string}>,
+     *     trio: list<array{combination: ?string, label: ?string}>,
+     *     exacta: list<array{combination: ?string, label: ?string}>,
+     *     quinella: list<array{combination: ?string, label: ?string}>,
+     *     quinella_place: list<array{combination: ?string, label: ?string}>,
+     *     win: list<array{combination: ?string, label: ?string}>,
+     *     place: list<array{combination: ?string, label: ?string}>,
      * }
      */
     private function scrapeAllCombinations(Crawler $scraper): array
     {
         return [
             'trifecta' => $this->scrapeCombinations($scraper, [
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[1]/tr[1]/td[2]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[1]/tr[2]/td[1]/div/div/span[%d]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[1]/tr[1]/td[2]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[1]/tr[2]/td[1]',
             ], range(1, 5)),
             'trio' => $this->scrapeCombinations($scraper, [
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[2]/tr[1]/td[2]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[2]/tr[2]/td[1]/div/div/span[%d]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[2]/tr[1]/td[2]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[2]/tr[2]/td[1]',
             ], range(1, 5)),
             'exacta' => $this->scrapeCombinations($scraper, [
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[3]/tr[1]/td[2]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[3]/tr[2]/td[1]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[3]/tr[3]/td[1]/div/div/span[%d]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[3]/tr[1]/td[2]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[3]/tr[2]/td[1]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[3]/tr[3]/td[1]',
             ], range(1, 3)),
             'quinella' => $this->scrapeCombinations($scraper, [
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[4]/tr[1]/td[2]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[4]/tr[2]/td[1]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[4]/tr[3]/td[1]/div/div/span[%d]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[4]/tr[1]/td[2]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[4]/tr[2]/td[1]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[4]/tr[3]/td[1]',
             ], range(1, 3)),
             'quinella_place' => $this->scrapeCombinations($scraper, [
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[1]/td[2]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[2]/td[1]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[3]/td[1]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[4]/td[1]/div/div/span[%d]',
-                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[5]/td[1]/div/div/span[%d]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[1]/td[2]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[2]/td[1]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[3]/td[1]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[4]/td[1]',
+                '%s/div[2]/div[%d]/div[1]/div/table/tbody[5]/tr[5]/td[1]',
             ], range(1, 3)),
             'win' => $this->scrapeCombinations($scraper, [
-                '%s//div[2]/div[%d]/div[1]/div/table/tbody[6]/tr[1]/td[2]/div/div/span[%d]',
-                '%s//div[2]/div[%d]/div[1]/div/table/tbody[6]/tr[2]/td[1]/div/div/span[%d]',
+                '%s//div[2]/div[%d]/div[1]/div/table/tbody[6]/tr[1]/td[2]',
+                '%s//div[2]/div[%d]/div[1]/div/table/tbody[6]/tr[2]/td[1]',
             ], range(1, 1)),
             'place' => $this->scrapeCombinations($scraper, [
-                '%s//div[2]/div[%d]/div[1]/div/table/tbody[7]/tr[1]/td[2]/div/div/span[%d]',
-                '%s//div[2]/div[%d]/div[1]/div/table/tbody[7]/tr[2]/td[1]/div/div/span[%d]',
-                '%s//div[2]/div[%d]/div[1]/div/table/tbody[7]/tr[3]/td[1]/div/div/span[%d]',
+                '%s//div[2]/div[%d]/div[1]/div/table/tbody[7]/tr[1]/td[2]',
+                '%s//div[2]/div[%d]/div[1]/div/table/tbody[7]/tr[2]/td[1]',
+                '%s//div[2]/div[%d]/div[1]/div/table/tbody[7]/tr[3]/td[1]',
             ], range(1, 1)),
         ];
     }
 
     /**
+     * A bet type whose combination was never settled carries no entry number
+     * spans and prints a label instead. Both 特払 (the bet type stands but no
+     * ticket won) and 不成立 (refunded boats left the bet type unsettled) read
+     * that way, and used to be dropped as an empty combination. Listing the
+     * known labels would drop the next unknown one, so the text of the cell is
+     * passed through as is and the reading is left to the caller.
+     *
      * @param \Symfony\Component\DomCrawler\Crawler $scraper
      * @param list<non-empty-string> $templates
      * @param list<int> $indexes
-     * @return list<string>
+     * @return list<array{combination: ?string, label: ?string}>
      */
     private function scrapeCombinations(Crawler $scraper, array $templates, array $indexes): array
     {
         $response = [];
 
         foreach ($templates as $template) {
+            $cellXPath = sprintf($template, $this->baseXPath, $this->baseLevel + 6);
+
             $values = [];
 
             foreach ($indexes as $index) {
-                $values[] = Filter::byXPath($scraper, sprintf($template, $this->baseXPath, $this->baseLevel + 6, $index));
+                $values[] = Filter::byXPath($scraper, sprintf('%s/div/div/span[%d]', $cellXPath, $index));
             }
 
-            $response[] = implode($values);
+            $combination = implode($values);
+
+            if ($combination !== '') {
+                $response[] = ['combination' => $combination, 'label' => null];
+
+                continue;
+            }
+
+            // An empty cell holds only &nbsp;, which trims down to an empty string.
+            $label = Filter::byXPath($scraper, $cellXPath);
+
+            $response[] = [
+                'combination' => null,
+                'label' => $label !== null && $label !== '' ? $label : null,
+            ];
         }
 
         return $response;
