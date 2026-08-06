@@ -6,6 +6,7 @@ namespace BVP\Scraper\Scrapers;
 
 use BVP\Scraper\Contracts\Scraper;
 use BVP\Scraper\Converters\Converter;
+use BVP\Scraper\Enums\Place;
 use BVP\Scraper\Filters\Filter;
 use BVP\Scraper\Filters\WindDirectionFilter;
 use BVP\Scraper\Parsers\Parser;
@@ -18,6 +19,25 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 final class ResultScraper extends BaseScraper implements Scraper
 {
+    /**
+     * Every key a racer entry carries, in the order the two passes of
+     * {@see self::scrapeRacers()} fill them in. Used to shape the entries for
+     * a race whose result table is not published yet.
+     *
+     * @var non-empty-list<non-empty-string>
+     */
+    private const array RACER_KEYS = [
+        'entry_number',
+        'course_number',
+        'start_timing_source',
+        'start_timing',
+        'place_number_source',
+        'place_number',
+        'number_source',
+        'number',
+        'name',
+    ];
+
     /**
      * @var int<0, 1>
      */
@@ -98,6 +118,20 @@ final class ResultScraper extends BaseScraper implements Scraper
      */
     private function scrapeRacers(Crawler $scraper): array
     {
+        if (!$this->hasResultTable($scraper)) {
+            $template = array_fill_keys(self::RACER_KEYS, null);
+
+            $response = ['racers' => []];
+
+            foreach (range(1, 6) as $entryNumberKey) {
+                $response['racers'][$entryNumberKey] = array_replace($template, [
+                    'entry_number' => $entryNumberKey,
+                ]);
+            }
+
+            return $response;
+        }
+
         $response = ['racers' => []];
 
         foreach (range(1, 6) as $index) {
@@ -165,6 +199,31 @@ final class ResultScraper extends BaseScraper implements Scraper
         ksort($response['racers'], SORT_NUMERIC);
 
         return $response;
+    }
+
+    /**
+     * The result table is not published for the first few dozen minutes after
+     * a race is confirmed, while the payout table already is. That drops one
+     * section from the page and shifts div[$baseLevel + 5] onto the payout
+     * table, so verify the value read as the place is one the enum knows
+     * before trusting the section.
+     *
+     * @param \Symfony\Component\DomCrawler\Crawler $scraper
+     * @return bool
+     */
+    private function hasResultTable(Crawler $scraper): bool
+    {
+        $placeFormat = '%s/div[2]/div[%d]/div[1]/div/table/tbody[1]/tr/td[1]';
+        $placeXPath = sprintf($placeFormat, $this->baseXPath, $this->baseLevel + 5);
+        $placeSource = Filter::byXPath($scraper, $placeXPath);
+
+        if ($placeSource === null) {
+            return false;
+        }
+
+        $shortNames = array_map(fn(Place $case): string => $case->shortName(), Place::cases());
+
+        return in_array($placeSource, $shortNames, true);
     }
 
     /**
@@ -334,6 +393,10 @@ final class ResultScraper extends BaseScraper implements Scraper
     }
 
     /**
+     * A missing or blank amount cell is not a payout of zero. Casting it would
+     * give one, and the row would then be reported as if the bet type paid
+     * nothing, so it is reported as missing instead.
+     *
      * @param \Symfony\Component\DomCrawler\Crawler $scraper
      * @param list<non-empty-string> $templates
      * @return list<?int<0, max>>
@@ -343,11 +406,19 @@ final class ResultScraper extends BaseScraper implements Scraper
         return array_map(function (string $template) use ($scraper): ?int {
             $value = Filter::byXPath($scraper, sprintf($template, $this->baseXPath, $this->baseLevel + 6));
 
-            $value = str_replace(',', '', str_replace('¥', '', $value ?? ''));
+            if ($value === null) {
+                return null;
+            }
 
-            $value = Converter::toInt($value);
+            $value = str_replace(',', '', str_replace('¥', '', $value));
 
-            return $value !== null && $value >= 0 ? $value : null;
+            if (!is_numeric($value)) {
+                return null;
+            }
+
+            $value = Converter::toIntStrict($value);
+
+            return $value >= 0 ? $value : null;
         }, $templates);
     }
 }

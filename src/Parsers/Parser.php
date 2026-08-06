@@ -39,7 +39,9 @@ final class Parser
      * Some racer names on boatrace.jp render without a space between the
      * family and given name (breaking the usual "family given" split used
      * by parseName()); this maps those specific known cases back to their
-     * properly spaced form.
+     * properly spaced form. A name that is not listed here keeps its printed
+     * form — dropping it would lose the racer entirely, and there is no
+     * source key to fall back on.
      *
      * @var array<non-empty-string, non-empty-string>
      */
@@ -107,7 +109,7 @@ final class Parser
         }
 
         return array_combine(self::NAME_KEYS, [
-            Converter::toString(self::UNSPACED_NAME_MAP[$value] ?? null),
+            Converter::toString(self::UNSPACED_NAME_MAP[$value] ?? $value),
         ]);
     }
 }
