@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BVP\Scraper\Factories;
 
 use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @author shimomo
@@ -16,12 +17,24 @@ final class HttpBrowserFactory
      * in per-instance server params (e.g. a proxy-specific header) so that
      * multiple Scraper instances can each carry their own browser identity.
      *
+     * $httpClient exists so a caller can set transport options — above all a
+     * timeout — without giving up the UA spoofing above. Symfony's default
+     * client times out at `default_socket_timeout` (60s on most builds) and
+     * has no `max_duration` cap at all, so a hung boatrace.jp response blocks
+     * for a minute per attempt, and {@see \BVP\Scraper\Retry\RetryPolicy}
+     * multiplies that by its attempt count. A batch caller sweeping a full
+     * day's grid should pass a client with explicit `timeout`/`max_duration`
+     * rather than inherit that.
+     *
      * @param array<non-empty-string, non-empty-string> $extraParameters
+     * @param ?\Symfony\Contracts\HttpClient\HttpClientInterface $httpClient
      * @return \Symfony\Component\BrowserKit\HttpBrowser
      */
-    public static function create(array $extraParameters = []): HttpBrowser
-    {
-        $httpBrowser = new HttpBrowser();
+    public static function create(
+        array $extraParameters = [],
+        ?HttpClientInterface $httpClient = null,
+    ): HttpBrowser {
+        $httpBrowser = new HttpBrowser($httpClient);
 
         $httpBrowser->setServerParameters(array_merge([
             'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' .

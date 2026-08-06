@@ -110,6 +110,26 @@ $results = $batchScraper->scrapeResult('2025-01-01');
 $results = $batchScraper->scrapeResult('2025-01-01', [24], [1, 2, 3]);
 ```
 
+#### 1レースの失敗で全体を落とさない（`onError`）
+
+既定では、リトライを使い切ったレースが1つでもあると例外がそのまま伝播し、**そのレース以降の全場・全レースが取得されません**。メンテナンス中のように全体が落ちる場合は問題になりませんが、特定のレースだけが恒久的に壊れている場合、失うのは壊れたレースではなくその後ろに並んでいた全場です。
+
+`onError` を渡すと、1レースの失敗はコールバックに渡されて結果から除外され、走査は続行します。ログに出すか、件数を数えて閾値で判断するかは呼び出し側で決められます。
+
+```php
+$failures = [];
+
+$results = $batchScraper->scrapeResult('2025-01-01', onError: function (
+    Throwable $throwable,
+    int $stadiumNumber,
+    int $raceNumber,
+) use (&$failures): void {
+    $failures[] = compact('stadiumNumber', 'raceNumber');
+});
+```
+
+開催場一覧の解決（`scrapeStadium()`）だけは `onError` の対象外で、従来どおり例外になります。走査すべきグリッドが決まらないため、隔離のしようがないためです。
+
 ### レスポンス形式（`_source` / 変換済み値）
 
 各フィールドは、公式サイトから取得した生の文字列（`{field}_source`）と、型変換・Enum変換済みの値（`{field}`）のペアで返されます。生データが常に残るため、変換ロジックの検証やデバッグがしやすくなっています。
@@ -215,6 +235,24 @@ $scraperB = new Scraper(
 
 // 両者は独立したレート状態を持つため、同一プロセス内で並行運用しても
 // 互いのペース配分を食い合わない
+```
+
+### タイムアウト
+
+既定の HTTP クライアントにはタイムアウトの指定がありません（Symfony の既定値＝`default_socket_timeout`、多くの環境で 60 秒。総時間の上限 `max_duration` は無制限）。応答が返らない場合、1回の試行あたり最大でこの時間ブロックし、さらにリトライ回数だけ繰り返します。一括取得で1日分を走査する用途では、明示的に指定することを推奨します。
+
+`HttpBrowserFactory::create()` に自前のクライアントを渡せば、このライブラリの UA 偽装ヘッダを維持したままトランスポート設定だけを差し替えられます。
+
+```php
+use BVP\Scraper\Factories\HttpBrowserFactory;
+use Symfony\Component\HttpClient\HttpClient;
+
+$scraper = new Scraper(
+    httpBrowser: HttpBrowserFactory::create(httpClient: HttpClient::create([
+        'timeout' => 15.0,
+        'max_duration' => 30.0,
+    ])),
+);
 ```
 
 ## ⚠️ Notes

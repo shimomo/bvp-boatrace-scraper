@@ -6,6 +6,7 @@ namespace BVP\Scraper;
 
 use Carbon\CarbonImmutable as Carbon;
 use Carbon\CarbonInterface;
+use Throwable;
 
 /**
  * Bulk counterpart to {@see Scraper}: every method fans a single-race
@@ -35,6 +36,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeResult(
@@ -42,6 +44,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -49,6 +52,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeResult($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -57,6 +61,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeProgram(
@@ -64,6 +69,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -71,6 +77,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeProgram($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -79,6 +86,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapePreview(
@@ -86,6 +94,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -93,6 +102,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapePreview($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -101,6 +111,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeOdds(
@@ -108,6 +119,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -115,6 +127,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeOdds($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -123,6 +136,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeWin(
@@ -130,6 +144,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -137,6 +152,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeWin($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -145,6 +161,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapePlace(
@@ -152,6 +169,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -159,6 +177,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapePlace($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -167,6 +186,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeSingle(
@@ -174,6 +194,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -181,6 +202,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeSingle($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -189,6 +211,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeExacta(
@@ -196,6 +219,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -203,6 +227,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeExacta($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -211,6 +236,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeQuinella(
@@ -218,6 +244,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -225,6 +252,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeQuinella($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -233,6 +261,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeQuinellaPlace(
@@ -240,6 +269,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -247,6 +277,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeQuinellaPlace($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -255,6 +286,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapePair(
@@ -262,6 +294,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -269,6 +302,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapePair($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -277,6 +311,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeTrifecta(
@@ -284,6 +319,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -291,6 +327,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeTrifecta($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -299,6 +336,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeTrio(
@@ -306,6 +344,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -313,6 +352,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeTrio($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -321,6 +361,7 @@ final class BatchScraper
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     public function scrapeTriple(
@@ -328,6 +369,7 @@ final class BatchScraper
         array $stadiumNumbers = [],
         array $raceNumbers = [],
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         return $this->batch(
             $date,
@@ -335,6 +377,7 @@ final class BatchScraper
             $raceNumbers,
             fn(CarbonInterface $d, int $s, int $r): array => $this->scraper->scrapeTriple($d, $s, $r, $forceRefresh),
             $forceRefresh,
+            $onError,
         );
     }
 
@@ -345,11 +388,24 @@ final class BatchScraper
      * single-race Scraper::scrape*() methods, so cache/rate-limiter/retry
      * behavior is uniform whether called one race at a time or in batch.
      *
+     * Without $onError a single unrecoverable race aborts the whole grid, so
+     * one permanently broken page costs the caller every stadium that would
+     * have been scraped after it — not just the broken race. Pass $onError to
+     * isolate failures instead: the throwable is handed to the callback with
+     * the stadium/race it came from, that entry is left out of the result,
+     * and the sweep continues. Deciding what a failure means (log and go on,
+     * count toward a threshold, rethrow) belongs to the caller, which is why
+     * the default stays fail-fast.
+     *
+     * Resolving which stadiums race on $date is deliberately *not* covered:
+     * without it there is no grid to iterate, so that call still throws.
+     *
      * @param \Carbon\CarbonInterface|non-empty-string $date
      * @param list<int<1, 24>> $stadiumNumbers
      * @param list<int<1, 12>> $raceNumbers
      * @param callable(CarbonInterface, int<1, 24>, int<1, 12>): array<non-empty-string, mixed> $scrapeOne
      * @param bool $forceRefresh
+     * @param ?callable(\Throwable, int<1, 24>, int<1, 12>): void $onError
      * @return array<int<1, 24>, array<int<1, 12>, array<non-empty-string, mixed>>>
      */
     private function batch(
@@ -358,6 +414,7 @@ final class BatchScraper
         array $raceNumbers,
         callable $scrapeOne,
         bool $forceRefresh = false,
+        ?callable $onError = null,
     ): array {
         $parsedDate = Carbon::parse($date);
 
@@ -373,7 +430,23 @@ final class BatchScraper
         $response = [];
         foreach ($stadiumNumbersToScrape as $stadiumNumber) {
             foreach ($uniqueRaceNumbers as $raceNumber) {
-                $response[$stadiumNumber][$raceNumber] = $scrapeOne($parsedDate, $stadiumNumber, $raceNumber);
+                if ($onError === null) {
+                    $response[$stadiumNumber][$raceNumber] = $scrapeOne($parsedDate, $stadiumNumber, $raceNumber);
+
+                    continue;
+                }
+
+                // \Throwable rather than \RuntimeException: RetryPolicy has
+                // already given up by the time anything reaches here, and a
+                // page whose structure changed can just as easily surface as
+                // a \TypeError out of a parser as a \RuntimeException out of
+                // the fetch. Both are "this one race is unusable", which is
+                // exactly what the caller asked to isolate.
+                try {
+                    $response[$stadiumNumber][$raceNumber] = $scrapeOne($parsedDate, $stadiumNumber, $raceNumber);
+                } catch (Throwable $throwable) {
+                    $onError($throwable, $stadiumNumber, $raceNumber);
+                }
             }
         }
 
