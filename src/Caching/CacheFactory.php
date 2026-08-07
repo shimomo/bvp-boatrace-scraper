@@ -25,7 +25,7 @@ final class CacheFactory
      *
      * @var non-empty-string
      */
-    private const string NAMESPACE = 'bvp-scraper.v3';
+    private const string NAMESPACE = 'bvp-scraper.v4';
 
     /**
      * Builds the default cache backend: a filesystem-backed PSR-16 cache
