@@ -25,7 +25,7 @@ final class ForceRefreshTest extends TestCase
     {
         $cacheDir = sys_get_temp_dir() . '/bvp-scraper-force-refresh-test-' . uniqid();
         $cache = CacheFactory::createDefault($cacheDir);
-        $scraper = new Scraper(cache: $cache);
+        $scraper = new Scraper(httpBrowser: MockBrowser::create(), cache: $cache);
 
         [$date, $stadiumNumber, $raceNumber] = ResultScraperDataProvider::scrapeProvider()[0]['arguments'];
         $correctResult = ResultScraperDataProvider::scrapeProvider()[0]['expected'];

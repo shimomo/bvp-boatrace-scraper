@@ -33,7 +33,7 @@ final class ScraperTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->scraper = new Scraper();
+        $this->scraper = new Scraper(httpBrowser: MockBrowser::create());
     }
 
     public function testDeprecatedScrapeResultBulkDelegatesToBatchScraper(): void

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BVP\Scraper\Tests;
 
 use BVP\Scraper\BatchScraper;
+use BVP\Scraper\Scraper;
 use BVP\Scraper\Tests\Scrapers\OddsScraperDataProvider;
 use BVP\Scraper\Tests\Scrapers\PreviewScraperDataProvider;
 use BVP\Scraper\Tests\Scrapers\ProgramScraperDataProvider;
@@ -30,7 +31,7 @@ final class BatchScraperTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->batchScraper = new BatchScraper();
+        $this->batchScraper = new BatchScraper(new Scraper(httpBrowser: MockBrowser::create()));
     }
 
     public function testScrapeResultFansOutOverExplicitStadiumAndRace(): void

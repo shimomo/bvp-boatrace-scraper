@@ -6,9 +6,9 @@ namespace BVP\Scraper\Tests\Scrapers;
 
 use BVP\Scraper\RateLimiting\ThrottleRateLimiter;
 use BVP\Scraper\Scrapers\OddsScraper;
+use BVP\Scraper\Tests\MockBrowser;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\BrowserKit\HttpBrowser;
 
 /**
  * @psalm-import-type RaceArguments from \BVP\Scraper\Tests\ScraperPsalmType
@@ -35,7 +35,7 @@ final class OddsScraperTest extends TestCase
     protected function setUp(): void
     {
         $this->scraper = new OddsScraper(
-            new HttpBrowser(),
+            MockBrowser::create(),
             new ThrottleRateLimiter(1.0),
         );
     }

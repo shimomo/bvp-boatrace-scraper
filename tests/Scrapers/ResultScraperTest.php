@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace BVP\Scraper\Tests\Scrapers;
 
 use BVP\Scraper\Scrapers\ResultScraper;
+use BVP\Scraper\Tests\MockBrowser;
 use Carbon\CarbonImmutable as Carbon;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\HttpClient\MockHttpClient;
-use Symfony\Component\HttpClient\Response\MockResponse;
 
 /**
  * @psalm-import-type RaceArguments from \BVP\Scraper\Tests\ScraperPsalmType
@@ -37,7 +35,7 @@ final class ResultScraperTest extends TestCase
     protected function setUp(): void
     {
         $this->scraper = new ResultScraper(
-            new HttpBrowser()
+            MockBrowser::create()
         );
     }
 
@@ -70,12 +68,8 @@ final class ResultScraperTest extends TestCase
      */
     public function testScrapeKeepsAPayoutRowWhoseAmountCannotBeRead(): void
     {
-        $html = (string) file_get_contents(__DIR__ . '/../fixtures/raceresult-missing-amount.html');
-
         $scraper = new ResultScraper(
-            new HttpBrowser(new MockHttpClient(new MockResponse($html, [
-                'response_headers' => ['content-type' => 'text/html; charset=utf-8'],
-            ])))
+            MockBrowser::create('raceresult-missing-amount.html')
         );
 
         $response = $scraper->scrape(Carbon::parse('2026-05-31'), 6, 12);

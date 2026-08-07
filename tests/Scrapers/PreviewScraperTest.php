@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace BVP\Scraper\Tests\Scrapers;
 
 use BVP\Scraper\Scrapers\PreviewScraper;
+use BVP\Scraper\Tests\MockBrowser;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\BrowserKit\HttpBrowser;
 
 /**
  * @psalm-import-type RaceArguments from \BVP\Scraper\Tests\ScraperPsalmType
@@ -34,7 +34,7 @@ final class PreviewScraperTest extends TestCase
     protected function setUp(): void
     {
         $this->scraper = new PreviewScraper(
-            new HttpBrowser()
+            MockBrowser::create()
         );
     }
 
