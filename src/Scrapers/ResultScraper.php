@@ -244,47 +244,70 @@ final class ResultScraper extends BaseScraper implements Scraper
 
     /**
      * @param \Symfony\Component\DomCrawler\Crawler $scraper
+     * Every bet type is always present, because {@see self::scrapeAllCombinations()}
+     * always returns all seven — a race with no payout table at all yields seven
+     * empty lists rather than a missing key, so a caller never has to test for one.
+     *
      * @return array{
-     *     payouts?: array{
-     *         trifecta?: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
-     *         trio?: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
-     *         exacta?: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
-     *         quinella?: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
-     *         quinella_place?: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
-     *         win?: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
-     *         place?: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
+     *     payouts: array{
+     *         trifecta: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
+     *         trio: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
+     *         exacta: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
+     *         quinella: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
+     *         quinella_place: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
+     *         win: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
+     *         place: list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>,
      *     }
      * }
      */
     private function scrapePayouts(Crawler $scraper): array
     {
-        $response = [];
-
         $combinations = $this->scrapeAllCombinations($scraper);
         $amounts = $this->scrapeAllAmounts($scraper);
 
-        foreach ($combinations as $name => $values) {
-            foreach ($values as $index => $value) {
-                if (!isset($response['payouts'][$name])) {
-                    $response['payouts'][$name] = [];
-                }
+        return [
+            'payouts' => [
+                'trifecta' => $this->toPayoutRows($combinations['trifecta'], $amounts['trifecta']),
+                'trio' => $this->toPayoutRows($combinations['trio'], $amounts['trio']),
+                'exacta' => $this->toPayoutRows($combinations['exacta'], $amounts['exacta']),
+                'quinella' => $this->toPayoutRows($combinations['quinella'], $amounts['quinella']),
+                'quinella_place' => $this->toPayoutRows(
+                    $combinations['quinella_place'],
+                    $amounts['quinella_place'],
+                ),
+                'win' => $this->toPayoutRows($combinations['win'], $amounts['win']),
+                'place' => $this->toPayoutRows($combinations['place'], $amounts['place']),
+            ],
+        ];
+    }
 
-                if ($value['combination'] === null && $value['label'] === null) {
-                    continue;
-                }
+    /**
+     * Pairs one bet type's combinations with its amounts by row position.
+     *
+     * @param list<array{combination: ?string, label: ?string}> $combinations
+     * @param list<?int<0, max>> $amounts
+     * @return list<array{combination: ?string, amount: ?int<0, max>, label: ?string}>
+     */
+    private function toPayoutRows(array $combinations, array $amounts): array
+    {
+        $rows = [];
 
-                // A row whose combination reads but whose amount does not points at the page
-                // having shifted rather than at the state of the table. Dropping the row would
-                // take the evidence with it, so it is kept with the amount left missing.
-                $response['payouts'][$name][] = [
-                    'combination' => $value['combination'],
-                    'amount' => $amounts[$name][$index] ?? null,
-                    'label' => $value['label'],
-                ];
+        foreach ($combinations as $index => $combination) {
+            if ($combination['combination'] === null && $combination['label'] === null) {
+                continue;
             }
+
+            // A row whose combination reads but whose amount does not points at the page
+            // having shifted rather than at the state of the table. Dropping the row would
+            // take the evidence with it, so it is kept with the amount left missing.
+            $rows[] = [
+                'combination' => $combination['combination'],
+                'amount' => $amounts[$index] ?? null,
+                'label' => $combination['label'],
+            ];
         }
 
-        return $response;
+        return $rows;
     }
 
     /**
