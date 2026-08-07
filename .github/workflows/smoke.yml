@@ -1,0 +1,46 @@
+name: Smoke
+
+# The rest of the suite reads frozen fixtures, so nothing else notices when
+# boatrace.jp changes shape. This job is the only one that asks the live site,
+# and it is kept off push/pull_request so a redesign (or the site simply being
+# down) never blocks a merge — it reports on its own schedule instead.
+
+on:
+  schedule:
+    - cron: '30 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: Live site smoke on PHP ${{ matrix.php-version }} (Ubuntu 24.04)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        # The floor this package supports, so a live run doubles as a check
+        # that nothing has crept in that only works on a newer PHP.
+        php-version:
+          - '8.3'
+    steps:
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml
+
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      # A single dropped connection should not raise an alarm about the site
+      # having changed, so one blip is forgiven and only a repeat fails.
+      - name: Run the smoke suite against boatrace.jp
+        run: |
+          vendor/bin/phpunit --configuration=phpunit.xml.dist --testsuite=Smoke --no-progress && exit 0
+          echo '::warning::First smoke attempt failed; retrying once in 60s.'
+          sleep 60
+          vendor/bin/phpunit --configuration=phpunit.xml.dist --testsuite=Smoke --no-progress

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
          cacheDirectory=".phpunit.cache"
+         defaultTestSuite="Boatrace Vibe Project"
          colors="true"
          processIsolation="false"
          stopOnFailure="false">
@@ -8,6 +9,10 @@
     <testsuites>
         <testsuite name="Boatrace Vibe Project">
             <directory suffix="Test.php">tests/</directory>
+            <exclude>tests/Smoke</exclude>
+        </testsuite>
+        <testsuite name="Smoke">
+            <directory suffix="Test.php">tests/Smoke</directory>
         </testsuite>
     </testsuites>
 
