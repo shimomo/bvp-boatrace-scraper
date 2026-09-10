@@ -41,6 +41,36 @@ final class PreviewParser
     /**
      * @var non-empty-list<non-empty-string>
      */
+    private const array WEATHER_AS_OF_KEYS = [
+        'weather_as_of_source',
+        'weather_as_of_race_number',
+        'weather_as_of_time',
+    ];
+
+    /**
+     * The heading of the water condition block, minus its constant caption.
+     *
+     * @var non-empty-string
+     */
+    private const string WEATHER_AS_OF_CAPTION_PATTERN = '/^水面気象情報[\s\x{3000}]*/u';
+
+    /**
+     * `12R時点` - the block is frozen at the moment the given race ran.
+     *
+     * @var non-empty-string
+     */
+    private const string WEATHER_AS_OF_RACE_PATTERN = '/\A(\d{1,2})R時点\z/u';
+
+    /**
+     * `18:04現在` - the block is a live reading taken at the given clock time.
+     *
+     * @var non-empty-string
+     */
+    private const string WEATHER_AS_OF_TIME_PATTERN = '/\A(\d{1,2}:\d{2})現在\z/u';
+
+    /**
+     * @var non-empty-list<non-empty-string>
+     */
     private const array WEATHER_KEYS = [
         'weather_number_source',
         'weather_number',
@@ -183,6 +213,60 @@ final class PreviewParser
         return array_combine(self::WAVE_HEIGHT_KEYS, [
             Converter::toString($value),
             Converter::toInt($value),
+        ]);
+    }
+
+    /**
+     * Reads the heading of the water condition block, which says *when* the
+     * reading it shows was taken. The block itself never says so in its cells,
+     * so without this a caller cannot tell a settled reading from a stale one.
+     *
+     * Two forms exist, and which one a page shows is decided by the race number
+     * rather than by the state of the page:
+     *
+     * - `12R時点` - the reading taken when race 12 ran. A race's page carries the
+     *   reading of the race before it, and freezes on it. Until that race has
+     *   run the page shows an older one, so the same URL answers `10R時点` and
+     *   then `11R時点` as the meeting proceeds. **A caller that wants the reading
+     *   it will keep must compare this against its own race number minus one.**
+     * - `18:04現在` - a live reading, restated as the clock moves. Race 1 has no
+     *   race before it and so shows this form for the whole day, which means
+     *   **race 1 never settles**: a page read after the meeting carries the last
+     *   reading of the day rather than the one race 1 ran in.
+     *
+     * Both values come back parsed, and an unknown wording leaves them null
+     * while keeping the heading in the source key, so that a form we have not
+     * seen is not mistaken for a settled reading.
+     *
+     * @param ?string $value
+     * @return array{
+     *     weather_as_of_source: ?string,
+     *     weather_as_of_race_number: ?int,
+     *     weather_as_of_time: ?string,
+     * }
+     */
+    public static function parseWeatherAsOf(?string $value): array
+    {
+        if ($value === null || $value === '') {
+            return array_fill_keys(self::WEATHER_AS_OF_KEYS, null);
+        }
+
+        $source = Converter::trim(
+            preg_replace(self::WEATHER_AS_OF_CAPTION_PATTERN, '', $value) ?? $value
+        );
+
+        if ($source === null || $source === '') {
+            return array_fill_keys(self::WEATHER_AS_OF_KEYS, null);
+        }
+
+        return array_combine(self::WEATHER_AS_OF_KEYS, [
+            Converter::toString($source),
+            preg_match(self::WEATHER_AS_OF_RACE_PATTERN, $source, $matches)
+                ? Converter::toInt($matches[1])
+                : null,
+            preg_match(self::WEATHER_AS_OF_TIME_PATTERN, $source, $matches)
+                ? Converter::toString($matches[1])
+                : null,
         ]);
     }
 

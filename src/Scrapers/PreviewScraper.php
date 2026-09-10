@@ -68,6 +68,13 @@ final class PreviewScraper extends BaseScraper implements Scraper
             $this->baseLevel = 1;
         }
 
+        // The heading says when the reading below it was taken; the cells do not.
+        // See PreviewParser::parseWeatherAsOf() for the two forms and why race 1
+        // differs from every other race.
+        $weatherAsOfFormat = '%s/div[2]/div[%d]/div[2]/div[2]/p';
+        $weatherAsOfXPath = sprintf($weatherAsOfFormat, $this->baseXPath, $this->baseLevel + 5);
+        $weatherAsOf = PreviewParser::parseWeatherAsOf(Filter::byXPath($scraper, $weatherAsOfXPath));
+
         $windSpeedFormat = '%s/div[2]/div[%d]/div[2]/div[2]/div[1]/div[3]/div/span[2]';
         $windSpeedXPath = sprintf($windSpeedFormat, $this->baseXPath, $this->baseLevel + 5);
         $windSpeed = PreviewParser::parseWindSpeed(Filter::byXPath($scraper, $windSpeedXPath));
@@ -98,6 +105,7 @@ final class PreviewScraper extends BaseScraper implements Scraper
         $response['stadium_number'] = $stadiumNumber;
         $response['race_number'] = $raceNumber;
 
+        $response += $weatherAsOf;
         $response += $windSpeed;
         $response += $windDirection;
         $response += $waveHeight;
