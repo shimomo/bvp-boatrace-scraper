@@ -31,8 +31,7 @@ final class ScraperTest extends TestCase
 
     public function testScrapeResultRejectsInvalidStadiumNumber(): void
     {
-        $this->expectException(ValueError::class);
-        $this->expectExceptionMessage('$stadiumNumber must be between 1 and 24, 0 given.');
+        $this->expectExceptionObject(new ValueError('$stadiumNumber must be between 1 and 24, 0 given.'));
 
         /** @psalm-suppress InvalidArgument */
         $this->scraper->scrapeResult('2017-03-31', 0, 1);
@@ -40,8 +39,7 @@ final class ScraperTest extends TestCase
 
     public function testScrapeResultRejectsInvalidRaceNumber(): void
     {
-        $this->expectException(ValueError::class);
-        $this->expectExceptionMessage('$raceNumber must be between 1 and 12, 0 given.');
+        $this->expectExceptionObject(new ValueError('$raceNumber must be between 1 and 12, 0 given.'));
 
         /** @psalm-suppress InvalidArgument */
         $this->scraper->scrapeResult('2017-03-31', 24, 0);
